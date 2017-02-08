@@ -14,11 +14,13 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.example.Scott.concessionstand.Main"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="com.example.Scott.concessionstand.Main" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -26,8 +28,18 @@
             android:label="@string/title_activity_customize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="com.example.Scott.concessionstand.Customize"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="com.example.Scott.concessionstand.Customize" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TotalPage"
+            android:label="@string/title_activity_total_page"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="com.example.Scott.concessionstand.TotalPage" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
     </application>

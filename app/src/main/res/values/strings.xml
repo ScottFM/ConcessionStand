@@ -4,4 +4,5 @@
     <string name="title_activity_customize">Customize</string>
     <string name="action_Home">Home</string>
     <string name="action_Customize">Customize</string>
+    <string name="title_activity_total_page">TotalPage</string>
 </resources>
