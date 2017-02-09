@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,7 +98,46 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
     public void onClick(View v) {
         finish();
         Intent I = new Intent("com.example.Scott.concessionstand.Main");
+        I.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
+        //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
         startActivity(I);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_Home) {
+            Intent I = new Intent("com.example.Scott.concessionstand.Main");
+            //startActivity(I1);
+
+            startActivity(I);
+            finish();
+            return true;
+        }
+
+        if (id == R.id.action_Customize) {
+            Intent I = new Intent("com.example.Scott.concessionstand.Customize");
+            //startActivity(I2);
+
+            startActivityForResult(I, 1);
+            finish();
+            return true;
+        }
+
+        if (id == R.id.action_titlePage) {
+            Intent I3 = new Intent("com.example.Scott.concessionstand.TotalPage");
+            //startActivity(I3);
+
+            startActivityForResult(I3, 1);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

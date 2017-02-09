@@ -105,6 +105,16 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
             //startActivity(I2);
 
             startActivityForResult(I, 1);
+            finish();
+            return true;
+        }
+
+        if (id == R.id.action_titlePage) {
+            Intent I3 = new Intent("com.example.Scott.concessionstand.TotalPage");
+            //startActivity(I3);
+
+            startActivityForResult(I3, 1);
+            finish();
             return true;
         }
 

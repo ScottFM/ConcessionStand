@@ -11,4 +11,8 @@
         android:title="@string/action_Customize"
         android:orderInCategory="101"
         android:id="@+id/action_Customize" />
+    <item
+        android:title="Title"
+        android:orderInCategory="102"
+        android:id="@+id/action_titlePage" />
 </menu>
