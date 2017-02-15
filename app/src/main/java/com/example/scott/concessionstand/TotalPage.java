@@ -1,6 +1,7 @@
 package com.example.scott.concessionstand;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,8 +27,10 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
     TextView total;
     TextView cashBack;
     EditText OutOf;
+    String totalP;
     float totalPrice = 0;
     Button cancel;
+    Button done;
     int hd;
     int s;
     int c;
@@ -45,11 +48,12 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
         s = getIntent().getIntExtra("Soda",0);
         c = getIntent().getIntExtra("Candy",0);
 
-        hdTxt.setText(hd + " x Hot dog: $" + (hd*1.50));
-        sTxt.setText(s + " x Soda: $" + (s*1.00));
-        cTxt.setText(c + " x Candy: $" + (c*0.75));
+        hdTxt.setText(String.format(hd + " x Hot dog: $" + "%.2f",(hd*1.50)));
+        sTxt.setText(String.format(s + " x Soda: $" + "%.2f",(s*1.00)));
+        cTxt.setText(String.format(c + " x Candy: $" + "%.2f",(c*0.75)));
         totalPrice = (float) ((hd*1.50) + (s*1.00) + (c*0.75));
-        total.setText("Total price: $" + totalPrice);
+        totalP = (String.format("%.2f",(hd*1.50) + (s*1.00) + (c*0.75)));
+        total.setText(String.format("Total price: $" + "%.2f",totalPrice));
         OutOf.addTextChangedListener(this);
     }
 
@@ -63,6 +67,8 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
         OutOf = (EditText) findViewById(R.id.edtOutOf);
         cancel = (Button) findViewById(R.id.btnCancel);
         cancel.setOnClickListener(this);
+        done = (Button) findViewById(R.id.btnDone);
+        done.setOnClickListener(this);
     }
 
     @Override
@@ -73,11 +79,12 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!s.toString().isEmpty()) {
-            int o = Integer.parseInt(s.toString());
+            float o = Float.parseFloat(s.toString());
             if (o - totalPrice >= 0) {
-                cashBack.setText("Change: $" + (o - totalPrice));
+                cashBack.setText(String.format("Change: $" + "%.2f",(o - totalPrice)));
             } else {
                 cashBack.setText("Insufficient money.");
+                Toast.makeText(this, "Insufficient money.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -96,11 +103,32 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
 
     @Override
     public void onClick(View v) {
-        finish();
-        Intent I = new Intent("com.example.Scott.concessionstand.Main");
-        I.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
-        //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
-        startActivity(I);
+        switch(v.getId())
+        {
+            case R.id.btnCancel:
+                finish();
+                Intent I = new Intent("com.example.Scott.concessionstand.Main");
+                I.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
+                //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
+                startActivity(I);
+                break;
+            case R.id.btnDone:
+                SharedPreferences shared = getSharedPreferences( "myFile", 0);
+                int hdd = shared.getInt("hotDogsDaily", 0);
+                int sd = shared.getInt("sodaDaily", 0);
+                int cd = shared.getInt("candyDaily", 0);
+                SharedPreferences.Editor e = shared.edit();
+                e.putInt("hotDogsDaily", hdd+hd);
+                e.putInt("sodaDaily", sd + s);
+                e.putInt("candyDaily", cd + c);
+                e.commit();
+                Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
+                I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
+                //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
+                startActivity(I2);
+                break;
+
+        }
 
     }
 
@@ -130,11 +158,20 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
             return true;
         }
 
-        if (id == R.id.action_titlePage) {
+        if (id == R.id.action_totalPage) {
             Intent I3 = new Intent("com.example.Scott.concessionstand.TotalPage");
             //startActivity(I3);
 
             startActivityForResult(I3, 1);
+            return true;
+        }
+
+        if (id == R.id.action_dailyTotal) {
+            Intent I4 = new Intent("com.example.Scott.concessionstand.DailyTotals");
+            //startActivity(I3);
+
+            startActivityForResult(I4, 1);
+            finish();
             return true;
         }
 

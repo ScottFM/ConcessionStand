@@ -75,7 +75,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
+                android:inputType="number|numberDecimal"
                 android:ems="10"
                 android:id="@+id/edtOutOf"
                 android:layout_weight="1"
@@ -105,7 +105,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="46dp"
         android:layout_marginStart="46dp"
-        android:id="@+id/btnCancel" />
+        android:id="@+id/btnCancel"
+        android:background="@color/CoeTertiary" />
 
     <Button
         android:text="Done"
@@ -116,6 +117,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="37dp"
         android:layout_marginEnd="37dp"
-        android:id="@+id/btnDone" />
+        android:id="@+id/btnDone"
+        android:background="@color/CoeTertiary" />
 
 </RelativeLayout>

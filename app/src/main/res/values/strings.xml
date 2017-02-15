@@ -5,4 +5,7 @@
     <string name="action_Home">Home</string>
     <string name="action_Customize">Customize</string>
     <string name="title_activity_total_page">TotalPage</string>
+    <string name="title_activity_daily_total">DailyTotal</string>
+    <string name="action_totalPage">Total</string>
+    <string name="action_DailyTotals">Daily Totals</string>
 </resources>

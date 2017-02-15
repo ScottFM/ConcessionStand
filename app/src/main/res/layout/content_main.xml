@@ -178,7 +178,7 @@
     </LinearLayout>
 
     <TextView
-        android:text="Running Total - $"
+        android:text="Running Total - $0.00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnClear"
@@ -187,22 +187,23 @@
         android:id="@+id/txtRunningTotal" />
 
     <Button
-        android:text="Clear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnClear"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp" />
-
-    <Button
         android:text="Total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnTotal"
+        android:background="@color/CoeTertiary"
         android:layout_below="@+id/txtRunningTotal"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="11dp"
-        android:layout_marginEnd="11dp" />
+        android:layout_toRightOf="@+id/txtRunningTotal"
+        android:layout_toEndOf="@+id/txtRunningTotal" />
+
+    <Button
+        android:text="Clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnClear"
+        android:layout_marginBottom="14dp"
+        android:background="@color/CoeTertiary"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/txtRunningTotal"
+        android:layout_toStartOf="@+id/txtRunningTotal" />
 </RelativeLayout>

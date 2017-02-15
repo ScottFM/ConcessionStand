@@ -1,6 +1,7 @@
 package com.example.scott.concessionstand;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     int numHotDog = 0;
     int numSoda = 0;
     int numCandy = 0;
+    int hotDogsDaily;
 
     public void setUpItems() {
         btnHDm = (Button) findViewById(R.id.btnHotDogMinus);
@@ -75,6 +77,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         btnCp.setOnClickListener(this);
         clear.setOnClickListener(this);
         total.setOnClickListener(this);
+
+        SharedPreferences s = getSharedPreferences("myFile", 0);
+
+        int hotDogsDaily = s.getInt("myValue", 0);
+
     }
 
     @Override
@@ -109,11 +116,20 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
             return true;
         }
 
-        if (id == R.id.action_titlePage) {
+        if (id == R.id.action_totalPage) {
             Intent I3 = new Intent("com.example.Scott.concessionstand.TotalPage");
             //startActivity(I3);
 
             startActivityForResult(I3, 1);
+            finish();
+            return true;
+        }
+
+        if (id == R.id.action_dailyTotal) {
+            Intent I4 = new Intent("com.example.Scott.concessionstand.DailyTotals");
+            //startActivity(I3);
+
+            startActivityForResult(I4, 1);
             finish();
             return true;
         }
@@ -183,6 +199,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 break;
 
         }
-        rt.setText("Running total - $" + (numHotDog*1.5 + numSoda*1 + numCandy*0.75));
+        rt.setText(String.format("Running total - $" + "%.2f",(numHotDog*1.5 + numSoda*1 + numCandy*0.75)));
     }
 }
