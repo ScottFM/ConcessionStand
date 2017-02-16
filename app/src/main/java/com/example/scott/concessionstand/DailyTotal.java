@@ -1,5 +1,6 @@
 package com.example.scott.concessionstand;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,13 +11,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class DailyTotal extends AppCompatActivity {
+public class DailyTotal extends AppCompatActivity implements View.OnClickListener {
 
     TextView txtNumHotDogsDaily, txtNumSodaDaily, txtNumCandyDaily, txtdailyrev;
     TextView hdRev, sRev, cRev;
+    Button reset;
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,8 @@ public class DailyTotal extends AppCompatActivity {
         sRev = (TextView) findViewById(R.id.txtSodaRev);
         cRev = (TextView) findViewById(R.id.txtCandyRev);
         txtdailyrev = (TextView) findViewById(R.id.txtDailyRev);
+        reset = (Button) findViewById(R.id.btnReset);
+        reset.setOnClickListener(this);
 
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
         int hdd = shared.getInt("hotDogsDaily", 0);
@@ -40,9 +46,9 @@ public class DailyTotal extends AppCompatActivity {
         txtNumSodaDaily.setText(Integer.toString(sd));
         txtNumCandyDaily.setText(Integer.toString(cd));
         hdRev.setText(String.format("$" + "%.2f",(hdd*1.50)));
-        sRev.setText(String.format("$" + "%.2f",(sd*1)));
+        sRev.setText(String.format("$" + "%.2f",(sd*1.0)));
         cRev.setText(String.format("$" + "%.2f",(cd*.75)));
-        txtdailyrev.setText(String.format("$" + "%.2f",(hdd*1.50)+(sd*1)+(sd*1)));
+        txtdailyrev.setText(String.format("$" + "%.2f",(hdd*1.50)+(sd*1)+(cd*0.75)));
 
     }
 
@@ -97,5 +103,27 @@ public class DailyTotal extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        SharedPreferences shared = getSharedPreferences( "myFile", 0);  //Reset the shared values to 0;
+        int hdd = 0;
+        int sd = 0;
+        int cd = 0;
+        SharedPreferences.Editor e = shared.edit();
+        e.putInt("hotDogsDaily", hdd);
+        e.putInt("sodaDaily", sd);
+        e.putInt("candyDaily", cd);
+        e.commit();
+
+        txtNumHotDogsDaily.setText(Integer.toString(hdd));              //Reset the textviews to display 0
+        txtNumSodaDaily.setText(Integer.toString(sd));
+        txtNumCandyDaily.setText(Integer.toString(cd));
+
+        hdRev.setText(String.format("$" + "%.2f",(hdd*1.50)));          //Reset the textviews to display 0
+        sRev.setText(String.format("$" + "%.2f",(sd*1.0)));
+        cRev.setText(String.format("$" + "%.2f",(cd*.75)));
+        txtdailyrev.setText(String.format("$" + "%.2f",(hdd*1.50)+(sd*1)+(cd*0.75)));
     }
 }
