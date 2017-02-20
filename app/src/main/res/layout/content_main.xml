@@ -207,22 +207,27 @@
         android:layout_toLeftOf="@+id/txtRunningTotal"
         android:layout_toStartOf="@+id/txtRunningTotal" />
 
-    <view
+
+    <com.example.scott.concessionstand.UpDownBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.scott.concessionstand.UpDownBox"
         android:id="@+id/udHotDog"
         android:layout_above="@+id/txtRunningTotal"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        app:itemPrice = "1.50"
+        app:itemName = "Hot Dog"/>
 
-    <view
+    <com.example.scott.concessionstand.UpDownBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.scott.concessionstand.UpDownBox"
         android:id="@+id/udSoda"
         android:layout_above="@+id/txtRunningTotal"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        app:itemPrice = "1.00"
+        app:itemName = "Soda"/>
 
 </RelativeLayout>

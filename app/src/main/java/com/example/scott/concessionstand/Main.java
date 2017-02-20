@@ -40,7 +40,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     int numHotDog = 0;
     int numSoda = 0;
     int numCandy = 0;
-    int hotDogsDaily;
+    //int hotDogsDaily;
+    UpDownBox udHd;
+    UpDownBox udS;
 
     public void setUpItems() {
         btnHDm = (Button) findViewById(R.id.btnHotDogMinus);
@@ -55,6 +57,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         rt = (TextView) findViewById(R.id.txtRunningTotal);
         clear = (Button) findViewById(R.id.btnClear);
         total = (Button) findViewById(R.id.btnTotal);
+        udHd = (UpDownBox) findViewById(R.id.udHotDog);
+        udS = (UpDownBox) findViewById(R.id.udSoda);
     }
 
     @Override

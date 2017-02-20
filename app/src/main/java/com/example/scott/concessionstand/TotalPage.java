@@ -24,6 +24,8 @@ import org.w3c.dom.Text;
 
 public class TotalPage extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
+
+
     TextView hdTxt;
     TextView sTxt;
     TextView cTxt;
