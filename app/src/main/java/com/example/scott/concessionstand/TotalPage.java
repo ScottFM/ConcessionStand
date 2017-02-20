@@ -77,20 +77,16 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
     }
 
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-            if (!OutOf.getText().toString().isEmpty()) {
-                float o = Float.parseFloat(OutOf.getText().toString());
-                if ((o - totalPrice >= 0) && (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    cashBack.setText(String.format("Change: $" + "%.2f", (o - totalPrice)));
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                } else {
-                    cashBack.setText("Insufficient money.");
-                    Toast.makeText(this, "Insufficient money.", Toast.LENGTH_SHORT).show();
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                }
+        if (!OutOf.getText().toString().isEmpty()) {
+            float o = Float.parseFloat(OutOf.getText().toString());
+            if ((o - totalPrice >= 0) && (actionId == EditorInfo.IME_ACTION_DONE)) {
+                cashBack.setText(String.format("Change: $" + "%.2f", (o - totalPrice)));
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            } else {
+                cashBack.setText("Insufficient money.");
+                Toast.makeText(this, "Insufficient money.", Toast.LENGTH_SHORT).show();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             }
-            return true;
         }
         return false;
     }

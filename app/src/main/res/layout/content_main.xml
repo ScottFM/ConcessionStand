@@ -13,179 +13,6 @@
     tools:context="com.example.scott.concessionstand.Main"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lytHotDog"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <Button
-            android:text="-"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnHotDogMinus"
-            android:background="@drawable/btnminus"
-            android:width="80dp"
-            android:minWidth="0dp"
-            android:tag="-" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="Hot Dog - $1.50"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtHotDog"
-                android:layout_weight="1"
-                android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtHotDogQuantity"
-                android:layout_weight="1"
-                android:hint="0"
-                android:textAlignment="center"
-                android:tag="HotDog" />
-
-        </LinearLayout>
-
-        <Button
-            android:text="+"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnHotDogPlus"
-            android:background="@drawable/btnplus"
-            android:width="80dp"
-            android:minWidth="0dp"
-            android:tag="+" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytHotDog"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="23dp"
-        android:id="@+id/lytSoda">
-
-        <Button
-            android:text="-"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSodaMinus"
-            android:background="@drawable/btnminus"
-            android:width="80dp"
-            android:minWidth="0dp"
-            android:tag="-" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="Soda - $1.00 "
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtSoda"
-                android:layout_weight="1"
-                android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtSodaQuantity"
-                android:layout_weight="1"
-                android:textAlignment="center"
-                android:hint="0"
-                android:tag="Soda" />
-
-        </LinearLayout>
-
-        <Button
-            android:text="+"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSodaPlus"
-            android:background="@drawable/btnplus"
-            android:width="80dp"
-            android:minWidth="0dp"
-            android:tag="+" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytSoda"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:id="@+id/lytCandy">
-
-        <Button
-            android:text="-"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnCandyMinus"
-            android:background="@drawable/btnminus"
-            android:minWidth="0dp"
-            android:width="80dp"
-            android:tag="-" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="Candy - $0.75"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtCandy"
-                android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtCandyQuantity"
-                android:textAlignment="center"
-                android:hint="0"
-                android:tag="Candy" />
-        </LinearLayout>
-
-        <Button
-            android:text="+"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnCandyPlus"
-            android:width="80dp"
-            android:minWidth="0dp"
-            android:background="@drawable/btnplus"
-            android:tag="+" />
-    </LinearLayout>
-
-    <TextView
-        android:text="Running Total - $0.00"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnClear"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="56dp"
-        android:id="@+id/txtRunningTotal" />
-
     <Button
         android:text="Total"
         android:layout_width="wrap_content"
@@ -213,21 +40,42 @@
         android:layout_height="wrap_content"
         class="com.example.scott.concessionstand.UpDownBox"
         android:id="@+id/udHotDog"
-        android:layout_above="@+id/txtRunningTotal"
+        app:itemPrice = "1.50"
+        app:itemName = "Hot Dog"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <com.example.scott.concessionstand.UpDownBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.example.scott.concessionstand.UpDownBox"
+        android:id="@+id/udCandy"
+        app:itemPrice = "0.75"
+        app:itemName = "Candy"
+        android:layout_below="@+id/udHotDog"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        app:itemPrice = "1.50"
-        app:itemName = "Hot Dog"/>
+        android:layout_marginTop="23dp" />
 
     <com.example.scott.concessionstand.UpDownBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.scott.concessionstand.UpDownBox"
         android:id="@+id/udSoda"
-        android:layout_above="@+id/txtRunningTotal"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         app:itemPrice = "1.00"
-        app:itemName = "Soda"/>
+        app:itemName = "Soda"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Running Total - $0.00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:id="@+id/txtRunningTotal"
+        android:layout_above="@+id/btnClear"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
