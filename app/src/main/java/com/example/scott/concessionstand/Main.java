@@ -72,38 +72,17 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Home) {
-            Intent I1 = new Intent("com.example.Scott.concessionstand.Main");
-            //startActivity(I1);
-
-            startActivity(I1);
-            return true;
-        }
-
         if (id == R.id.action_Customize) {
             Intent I = new Intent("com.example.Scott.concessionstand.Customize");
-            //startActivity(I2);
-
             startActivityForResult(I, 1);
-            finish();
-            return true;
-        }
-
-        if (id == R.id.action_totalPage) {
-            Intent I3 = new Intent("com.example.Scott.concessionstand.TotalPage");
-            //startActivity(I3);
-
-            startActivityForResult(I3, 1);
-            finish();
+            //finish();
             return true;
         }
 
         if (id == R.id.action_dailyTotal) {
-            Intent I4 = new Intent("com.example.Scott.concessionstand.DailyTotals");
-            //startActivity(I3);
-
-            startActivityForResult(I4, 1);
-            finish();
+            Intent I2 = new Intent("com.example.Scott.concessionstand.DailyTotals");
+            startActivityForResult(I2, 1);
+            //finish();
             return true;
         }
 

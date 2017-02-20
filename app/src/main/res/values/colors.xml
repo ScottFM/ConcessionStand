@@ -6,4 +6,6 @@
     <color name="CoeCrimson">#940C12</color>
     <color name="CoeGold">#D49F54</color>
     <color name="CoeTertiary">#8B6D4C</color>
+    <color name="LightGray">#D3D3D3</color>
+    <color name="DarkGray">#2F4F4F</color>
 </resources>

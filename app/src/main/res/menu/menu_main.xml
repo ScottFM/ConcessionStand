@@ -3,17 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.scott.concessionstand.Main">
     <item
-        android:id="@+id/action_Home"
-        android:orderInCategory="100"
-        android:title="@string/action_Home" />
-    <item
         android:title="@string/action_Customize"
         android:orderInCategory="101"
         android:id="@+id/action_Customize" />
-    <item
-        android:title="@string/action_totalPage"
-        android:orderInCategory="102"
-        android:id="@+id/action_totalPage" />
     <item
         android:title="@string/action_DailyTotals"
         android:orderInCategory="103"
