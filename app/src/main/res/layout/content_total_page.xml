@@ -81,7 +81,8 @@
                 android:layout_weight="1"
                 android:hint="0"
                 android:textSize="24sp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:imeOptions="actionDone" />
 
         </LinearLayout>
 

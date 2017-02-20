@@ -4,5 +4,4 @@
     android:textColor="#eeffffff" >
     <solid android:color="@color/CoeCrimson" />
     <corners android:radius = "20dp"/>
-
 </shape>

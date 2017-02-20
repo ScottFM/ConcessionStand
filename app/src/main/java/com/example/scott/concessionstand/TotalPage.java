@@ -9,9 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,7 +22,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
-public class TotalPage extends AppCompatActivity implements TextWatcher, View.OnClickListener {
+public class TotalPage extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
     TextView hdTxt;
     TextView sTxt;
@@ -44,17 +47,17 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
 
         setUp();
 
-        hd = getIntent().getIntExtra("HotDog",0);
-        s = getIntent().getIntExtra("Soda",0);
-        c = getIntent().getIntExtra("Candy",0);
+        hd = getIntent().getIntExtra("HotDog", 0);
+        s = getIntent().getIntExtra("Soda", 0);
+        c = getIntent().getIntExtra("Candy", 0);
 
-        hdTxt.setText(String.format(hd + " x Hot dog: $" + "%.2f",(hd*1.50)));
-        sTxt.setText(String.format(s + " x Soda: $" + "%.2f",(s*1.00)));
-        cTxt.setText(String.format(c + " x Candy: $" + "%.2f",(c*0.75)));
-        totalPrice = (float) ((hd*1.50) + (s*1.00) + (c*0.75));
-        totalP = (String.format("%.2f",(hd*1.50) + (s*1.00) + (c*0.75)));
-        total.setText(String.format("Total price: $" + "%.2f",totalPrice));
-        OutOf.addTextChangedListener(this);
+        hdTxt.setText(String.format(hd + " x Hot dog: $" + "%.2f", (hd * 1.50)));
+        sTxt.setText(String.format(s + " x Soda: $" + "%.2f", (s * 1.00)));
+        cTxt.setText(String.format(c + " x Candy: $" + "%.2f", (c * 0.75)));
+        totalPrice = (float) ((hd * 1.50) + (s * 1.00) + (c * 0.75));
+        totalP = (String.format("%.2f", (hd * 1.50) + (s * 1.00) + (c * 0.75)));
+        total.setText(String.format("Total price: $" + "%.2f", totalPrice));
+        OutOf.setOnEditorActionListener(this);
     }
 
 
@@ -71,22 +74,23 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
         done.setOnClickListener(this);
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!s.toString().isEmpty()) {
-            float o = Float.parseFloat(s.toString());
-            if (o - totalPrice >= 0) {
-                cashBack.setText(String.format("Change: $" + "%.2f",(o - totalPrice)));
-            } else {
-                cashBack.setText("Insufficient money.");
-                Toast.makeText(this, "Insufficient money.", Toast.LENGTH_SHORT).show();
+            if (!OutOf.getText().toString().isEmpty()) {
+                float o = Float.parseFloat(OutOf.getText().toString());
+                if ((o - totalPrice >= 0) && (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    cashBack.setText(String.format("Change: $" + "%.2f", (o - totalPrice)));
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                } else {
+                    cashBack.setText("Insufficient money.");
+                    Toast.makeText(this, "Insufficient money.", Toast.LENGTH_SHORT).show();
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
             }
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -97,14 +101,8 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
     public void onClick(View v) {
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.btnCancel:
                 finish();
                 Intent I = new Intent("com.example.Scott.concessionstand.Main");
@@ -113,12 +111,12 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
                 startActivity(I);
                 break;
             case R.id.btnDone:
-                SharedPreferences shared = getSharedPreferences( "myFile", 0);
+                SharedPreferences shared = getSharedPreferences("myFile", 0);
                 int hdd = shared.getInt("hotDogsDaily", 0);
                 int sd = shared.getInt("sodaDaily", 0);
                 int cd = shared.getInt("candyDaily", 0);
                 SharedPreferences.Editor e = shared.edit();
-                e.putInt("hotDogsDaily", hdd+hd);
+                e.putInt("hotDogsDaily", hdd + hd);
                 e.putInt("sodaDaily", sd + s);
                 e.putInt("candyDaily", cd + c);
                 e.commit();
@@ -127,9 +125,7 @@ public class TotalPage extends AppCompatActivity implements TextWatcher, View.On
                 //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
                 startActivity(I2);
                 break;
-
         }
-
     }
 
     @Override
