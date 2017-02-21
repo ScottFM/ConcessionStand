@@ -15,11 +15,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,11 +47,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 
         clear.setOnClickListener(this);
         total.setOnClickListener(this);
-
-        SharedPreferences s = getSharedPreferences("myFile", 0);
-
-        int hotDogsDaily = s.getInt("myValue", 0);
-
     }
 
     @Override
@@ -62,6 +54,23 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    protected void onSaveInstanceState(Bundle savedInstance) {  //this function lets you save the info if you rotate the phone or pause the activity
+        savedInstance.putInt("udHd", udHd.returnVal());
+        savedInstance.putInt("udS", udS.returnVal());
+        savedInstance.putInt("udC", udC.returnVal());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstance) {  //opens the saved info from previous function
+        int udHdVal = savedInstance.getInt("udHd");
+        int udSVal = savedInstance.getInt("udS");
+        int udCVal = savedInstance.getInt("udC");
+
+        udHd.setVal(udHdVal);
+        udS.setVal(udSVal);
+        udC.setVal(udCVal);
     }
 
     @Override
@@ -89,7 +98,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent response) {
+    public void onActivityResult(int requestCode, int resultCode, Intent response) {    //for customizing eventually
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
 
@@ -116,8 +125,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 I.putExtra("Candy", udC.returnVal());
                 startActivityForResult(I, 1);
                 break;
-
         }
-        rt.setText(String.format("Running total - $" + "%.2f",(udHd.returnVal()*1.5 + udS.returnVal()*1 + udC.returnVal()*0.75)));
     }
 }
