@@ -11,15 +11,22 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import static android.R.attr.id;
 
 public class Customize extends AppCompatActivity implements View.OnClickListener {
 
     Button b;
     EditText name;
     EditText price;
+    ListView lv1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +34,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.activity_customize);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         name = (EditText) findViewById(R.id.edtName);
         price = (EditText) findViewById(R.id.edtPrice);
@@ -76,16 +74,30 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     }
 
     public void onClick(View v) {
-        Intent data = new Intent();
 
-        String myName = name.getText().toString();
-        Editable myPrice = price.getText();
-        data.putExtra("Name", myName);
-        data.putExtra("Price",myPrice);
+        switch(id) {
+            case R.id.btnAdd:
+                ArrayAdapter<Bundle> lstAdapter;
 
-        data.setData(Uri.parse(myName));
-        //data.setData(Uri.parse(myName));
-        setResult(RESULT_OK, data);
-        finish();
+                lv1 = (ListView) findViewById(R.id.lstCustomize1);
+
+                ArrayList<Bundle> aList = new ArrayList<Bundle>();
+
+                String myName = name.getText().toString();
+                String myPrice = price.getText().toString();
+                Bundle newBundle = new Bundle();
+                newBundle.putString(myName, myPrice);
+
+                aList.add(newBundle);
+                //aList.add("Options2");
+                //aList.add("Options3");
+
+                lstAdapter = new ArrayAdapter<Bundle>(this, android.R.layout.simple_list_item_1, aList);
+
+                lv1.setAdapter(lstAdapter);
+
+                finish();
+                break;
+        }
     }
 }

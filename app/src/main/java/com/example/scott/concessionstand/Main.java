@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Main extends AppCompatActivity implements View.OnClickListener {
+public class Main extends AppCompatActivity implements View.OnClickListener, onValueChangedListener {
 
     TextView rt;
     Button clear;
@@ -45,8 +45,14 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 
         setUpItems();
 
+        rt.setText(String.format("Running Total - $" + "%.2f",(((udHd.returnVal()+1)*1.50)+((udS.returnVal()+1)*1)+((udC.returnVal()+1)*0.75))));
+
         clear.setOnClickListener(this);
         total.setOnClickListener(this);
+
+        udHd.setOnValueChangedListener(this);
+        udS.setOnValueChangedListener(this);
+        udC.setOnValueChangedListener(this);
     }
 
     @Override
@@ -117,6 +123,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 udHd.setVal(0);
                 udS.setVal(0);
                 udC.setVal(0);
+                //onValueChanged(this);
                 break;
             case R.id.btnTotal:
                 Intent I = new Intent("com.example.Scott.concessionstand.TotalPage");
@@ -126,5 +133,16 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 startActivityForResult(I, 1);
                 break;
         }
+
+        //Create a new event that listens for the value to change.
+        //Event listens for any change in the custom view.
+    }
+
+
+    @Override
+    public void onValueChanged(View v) {
+        rt.setText(String.format("Running Total - $" + "%.2f",(((udHd.returnVal()+1)*1.50)+((udS.returnVal()+1)*1)+((udC.returnVal()+1)*0.75))));
+        //how to make this account for change of new value instead of old
+        //how to make the clear button be onvaluechanged
     }
 }
