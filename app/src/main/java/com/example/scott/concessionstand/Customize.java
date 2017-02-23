@@ -1,6 +1,7 @@
 package com.example.scott.concessionstand;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -75,28 +76,45 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     public void onClick(View v) {
 
-        switch(id) {
+        switch(v.getId()) {
             case R.id.btnAdd:
-                ArrayAdapter<Bundle> lstAdapter;
+                Toast.makeText(this, "Workesfasdfasdfasdf", Toast.LENGTH_SHORT).show();
+                ArrayAdapter<String> lstAdapter;
 
                 lv1 = (ListView) findViewById(R.id.lstCustomize1);
 
-                ArrayList<Bundle> aList = new ArrayList<Bundle>();
+                ArrayList<String> aList = new ArrayList<String>();
 
                 String myName = name.getText().toString();
                 String myPrice = price.getText().toString();
-                Bundle newBundle = new Bundle();
-                newBundle.putString(myName, myPrice);
 
-                aList.add(newBundle);
-                //aList.add("Options2");
-                //aList.add("Options3");
+                String newString= new String(myName + ", $" + myPrice);
 
-                lstAdapter = new ArrayAdapter<Bundle>(this, android.R.layout.simple_list_item_1, aList);
+                if (aList.size() < 8)
+                    aList.add(newString);
+
+                SharedPreferences shared = getSharedPreferences("myFile", 0);
+                //int hdd = shared.getInt("hotDogsDaily", 0);
+                //int sd = shared.getInt("sodaDaily", 0);
+                //int cd = shared.getInt("candyDaily", 0);
+                SharedPreferences.Editor e = shared.edit();
+                e.putStringSet("items",aList);
+                e.putInt("hotDogsDaily", hdd + hd);
+                e.putInt("sodaDaily", sd + s);
+                e.putInt("candyDaily", cd + c);
+                e.commit();
+                Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
+                I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
+                //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
+                startActivity(I2);
+
+
+
+
+                lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
 
                 lv1.setAdapter(lstAdapter);
 
-                finish();
                 break;
         }
     }

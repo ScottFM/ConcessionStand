@@ -45,7 +45,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
         setUpItems();
 
-        rt.setText(String.format("Running Total - $" + "%.2f",(((udHd.returnVal()+1)*1.50)+((udS.returnVal()+1)*1)+((udC.returnVal()+1)*0.75))));
+        rt.setText(String.format("Running Total - $" + "%.2f",((udHd.returnVal()*1.50)+(udS.returnVal()*1)+(udC.returnVal()*0.75))));
 
         clear.setOnClickListener(this);
         total.setOnClickListener(this);
@@ -77,6 +77,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         udHd.setVal(udHdVal);
         udS.setVal(udSVal);
         udC.setVal(udCVal);
+
+        rt.setText(String.format("Running Total - $" + "%.2f",((udHd.returnVal()*1.50)+(udS.returnVal()*1)+(udC.returnVal()*0.75))));
     }
 
     @Override
@@ -123,7 +125,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
                 udHd.setVal(0);
                 udS.setVal(0);
                 udC.setVal(0);
-                //onValueChanged(this);
+                rt.setText(String.format("Running Total - $" + "%.2f",((udHd.returnVal()*1.50)+(udS.returnVal()*1)+(udC.returnVal()*0.75))));
                 break;
             case R.id.btnTotal:
                 Intent I = new Intent("com.example.Scott.concessionstand.TotalPage");
@@ -141,7 +143,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
     @Override
     public void onValueChanged(View v) {
-        rt.setText(String.format("Running Total - $" + "%.2f",(((udHd.returnVal()+1)*1.50)+((udS.returnVal()+1)*1)+((udC.returnVal()+1)*0.75))));
+        rt.setText(String.format("Running Total - $" + "%.2f",((udHd.returnVal()*1.50)+(udS.returnVal()*1)+(udC.returnVal()*0.75))));
         //how to make this account for change of new value instead of old
         //how to make the clear button be onvaluechanged
     }
