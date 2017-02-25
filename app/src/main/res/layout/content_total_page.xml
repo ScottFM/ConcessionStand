@@ -16,38 +16,45 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lytTop">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtHotDog2"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtSoda2"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtCandy2"
-            android:textSize="30sp" />
+        android:layout_height="match_parent"
+        android:id="@+id/lytTop"
+        android:layout_above="@+id/lytBottom">
 
     </LinearLayout>
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="46dp"
+        android:layout_marginStart="46dp"
+        android:id="@+id/btnCancel"
+        android:background="@color/CoeTertiary" />
+
+    <Button
+        android:text="Done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnCancel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="37dp"
+        android:layout_marginEnd="37dp"
+        android:id="@+id/btnDone"
+        android:background="@color/CoeTertiary" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lytBottom"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/btnCancel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="109dp">
+        android:layout_marginBottom="18dp">
 
         <TextView
             android:text="Total: $"
@@ -96,29 +103,5 @@
             android:textSize="24sp" />
 
     </LinearLayout>
-
-    <Button
-        android:text="Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="46dp"
-        android:layout_marginStart="46dp"
-        android:id="@+id/btnCancel"
-        android:background="@color/CoeTertiary" />
-
-    <Button
-        android:text="Done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnCancel"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp"
-        android:id="@+id/btnDone"
-        android:background="@color/CoeTertiary" />
 
 </RelativeLayout>

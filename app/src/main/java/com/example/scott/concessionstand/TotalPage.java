@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +25,6 @@ import org.w3c.dom.Text;
 
 public class TotalPage extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
-
-
-    TextView hdTxt;
-    TextView sTxt;
-    TextView cTxt;
     TextView total;
     TextView cashBack;
     EditText OutOf;
@@ -36,9 +32,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
     float totalPrice = 0;
     Button cancel;
     Button done;
-    int hd;
-    int s;
-    int c;
+    LinearLayout lyt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +43,37 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
 
         setUp();
 
-        hd = getIntent().getIntExtra("HotDog", 0);
-        s = getIntent().getIntExtra("Soda", 0);
-        c = getIntent().getIntExtra("Candy", 0);
-
-        hdTxt.setText(String.format(hd + " x Hot dog: $" + "%.2f", (hd * 1.50)));
-        sTxt.setText(String.format(s + " x Soda: $" + "%.2f", (s * 1.00)));
-        cTxt.setText(String.format(c + " x Candy: $" + "%.2f", (c * 0.75)));
-        totalPrice = (float) ((hd * 1.50) + (s * 1.00) + (c * 0.75));
-        totalP = (String.format("%.2f", (hd * 1.50) + (s * 1.00) + (c * 0.75)));
-        total.setText(String.format("Total price: $" + "%.2f", totalPrice));
         OutOf.setOnEditorActionListener(this);
+        lyt = (LinearLayout) findViewById(R.id.lytTop);
+
+        SharedPreferences shared = getSharedPreferences( "myFile", 0);
+        int numInList = shared.getInt("numInList", 0);
+
+        for (int i = 0; i < numInList; i++) {
+            String name = shared.getString("ItemName" + Integer.toString(i), "");
+            float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
+            int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
+
+            if (name != "") {
+                //Toast.makeText(this, "worked in OnCreate + " + name, Toast.LENGTH_SHORT).show();
+                String info = String.format(val + " x " + name + ": $" +"%.2f",(price));
+                TextView tv = new TextView(this);
+
+                tv.setText(info);
+                lyt.addView(tv);
+            }
+        }
     }
 
 
     public void setUp() {
-        hdTxt = (TextView) findViewById(R.id.txtHotDog2);
-        sTxt = (TextView) findViewById(R.id.txtSoda2);
-        cTxt = (TextView) findViewById(R.id.txtCandy2);
         total = (TextView) findViewById(R.id.txtTotal2);
         cashBack = (TextView) findViewById(R.id.txtCashBack);
         OutOf = (EditText) findViewById(R.id.edtOutOf);
+
         cancel = (Button) findViewById(R.id.btnCancel);
         cancel.setOnClickListener(this);
+
         done = (Button) findViewById(R.id.btnDone);
         done.setOnClickListener(this);
     }
@@ -110,14 +112,14 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                 break;
             case R.id.btnDone:
                 SharedPreferences shared = getSharedPreferences("myFile", 0);
-                int hdd = shared.getInt("hotDogsDaily", 0);
+                /*int hdd = shared.getInt("hotDogsDaily", 0);
                 int sd = shared.getInt("sodaDaily", 0);
                 int cd = shared.getInt("candyDaily", 0);
                 SharedPreferences.Editor e = shared.edit();
                 e.putInt("hotDogsDaily", hdd + hd);
                 e.putInt("sodaDaily", sd + s);
                 e.putInt("candyDaily", cd + c);
-                e.commit();
+                e.commit();*/
                 Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
                 I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
                 //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.

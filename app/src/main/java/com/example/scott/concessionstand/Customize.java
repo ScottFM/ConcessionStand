@@ -32,6 +32,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     ListView lv1;
     ArrayList<String> aList = new ArrayList<String>();
     double p = 0;
+    int numInList = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +123,18 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
             case R.id.btnSave:
                 SharedPreferences shared = getSharedPreferences( "myFile", 0);
                 SharedPreferences.Editor e = shared.edit();
-                for (int i = 0; i < aList.size(); i++) {
-                    String next = aList.get(i);
-                    String item = next.substring(0,next.indexOf(","));
-                    String price = next.substring(next.indexOf("$", -1));
-                    e.putString("ItemName" + i, item);
-                    e.putString("ItemPrice" + i, price);
+                if (aList.size() > 0) {
+                    for (int i = 0; i < aList.size(); i++) {
+                        String next = aList.get(i);
+                        String item = next.substring(0,next.indexOf(","));
+                        float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
+                        e.putString("ItemName" + i, item);
+                        e.putFloat("ItemPrice" + i, price);
+                        numInList++;
+                        e.putInt("numInList", numInList);
+                    }
+                    e.commit();
                 }
-                e.commit();
 
                 Intent I = new Intent("com.example.Scott.concessionstand.Main");
                 startActivity(I);
