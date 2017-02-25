@@ -37,30 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.scott.concessionstand.UpDownBox"
-        android:id="@+id/udSoda"
-        app:itemPrice = "1.00"
-        app:itemName = "Soda"
-        android:layout_marginTop="23dp"
-        android:layout_below="@+id/view5"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp" />
-
-    <view
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="com.example.scott.concessionstand.UpDownBox"
-        android:layout_marginTop="27dp"
-        android:id="@+id/view5"
-        android:layout_below="@+id/udCandy"
-        android:layout_alignLeft="@+id/udSoda"
-        android:layout_alignStart="@+id/udSoda" />
-
-    <com.example.scott.concessionstand.UpDownBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="com.example.scott.concessionstand.UpDownBox"
         android:id="@+id/udCandy"
         app:itemPrice = "0.75"
         app:itemName = "Candy"
@@ -68,17 +44,6 @@
         android:layout_below="@+id/udHotDog"
         android:layout_alignLeft="@+id/view5"
         android:layout_alignStart="@+id/view5" />
-
-    <com.example.scott.concessionstand.UpDownBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        class="com.example.scott.concessionstand.UpDownBox"
-        android:id="@+id/udHotDog"
-        app:itemPrice = "1.50"
-        app:itemName = "Hot Dog"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/udCandy"
-        android:layout_alignStart="@+id/udCandy" />
 
     <Button
         android:text="Total"
@@ -89,5 +54,35 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <com.example.scott.concessionstand.UpDownBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.example.scott.concessionstand.UpDownBox"
+        android:id="@+id/udHotDog"
+        app:itemPrice = "1.50"
+        app:itemName = "Hot Dog"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <com.example.scott.concessionstand.UpDownBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.example.scott.concessionstand.UpDownBox"
+        android:id="@+id/udSoda"
+        app:itemPrice = "1.00"
+        app:itemName = "Soda"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/udCandy"
+        android:id="@+id/grdView" />
 
 </RelativeLayout>

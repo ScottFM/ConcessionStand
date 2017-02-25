@@ -14,9 +14,16 @@ import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends AppCompatActivity implements View.OnClickListener, onValueChangedListener {
 
@@ -26,6 +33,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
     UpDownBox udHd;
     UpDownBox udS;
     UpDownBox udC;
+    GridView grid;
+    ArrayList<UpDownBox> udbList;
 
     public void setUpItems() {
         rt = (TextView) findViewById(R.id.txtRunningTotal);
@@ -34,6 +43,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         udHd = (UpDownBox) findViewById(R.id.udHotDog);
         udS = (UpDownBox) findViewById(R.id.udSoda);
         udC = (UpDownBox) findViewById(R.id.udCandy);
+        grid = (GridView) findViewById(R.id.grdView);
+        udbList = new ArrayList<UpDownBox>();
     }
 
     @Override
@@ -53,6 +64,27 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         udHd.setOnValueChangedListener(this);
         udS.setOnValueChangedListener(this);
         udC.setOnValueChangedListener(this);
+
+        SharedPreferences shared = getSharedPreferences( "myFile", 0);
+        for (int i = 0; i < 9; i++) {
+            String name = shared.getString("ItemName" + i, "");
+            String price = shared.getString("ItemPrice" + i, "");
+
+            if (name != "") {
+                Toast.makeText(this, "worked here", Toast.LENGTH_SHORT).show();
+                UpDownBox newUDB = new UpDownBox(this);
+                newUDB.setItem(name);
+                newUDB.setPrice(price);
+
+                udbList.add(0, newUDB);
+
+                ArrayAdapter<UpDownBox> gridAdapter;
+
+                gridAdapter = new ArrayAdapter<UpDownBox>(this, android.R.layout.simple_list_item_1, udbList);
+                grid.setAdapter(gridAdapter);
+            }
+        }
+
     }
 
     @Override

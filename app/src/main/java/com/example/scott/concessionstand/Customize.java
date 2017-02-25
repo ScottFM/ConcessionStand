@@ -16,18 +16,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 
 import static android.R.attr.id;
 
 public class Customize extends AppCompatActivity implements View.OnClickListener {
 
-    Button b;
+    Button b, bUp25, bDown25,btnSave;
     EditText name;
-    EditText price;
+    TextView price;
     ListView lv1;
+    ArrayList<String> aList = new ArrayList<String>();
+    double p = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,19 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         setSupportActionBar(toolbar);
 
         name = (EditText) findViewById(R.id.edtName);
-        price = (EditText) findViewById(R.id.edtPrice);
+        price = (TextView) findViewById(R.id.txtPriceCust);
 
         b = (Button) findViewById(R.id.btnAdd);
         b.setOnClickListener(this);
+
+        bDown25 = (Button) findViewById(R.id.btnDown25);
+        bDown25.setOnClickListener(this);
+
+        bUp25 = (Button) findViewById(R.id.btnUp25);
+        bUp25.setOnClickListener(this);
+
+        btnSave = (Button) findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(this);
     }
 
     @Override
@@ -77,13 +90,20 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
 
         switch(v.getId()) {
+            case R.id.btnUp25:
+                p += 0.25;
+                price.setText(String.format("%.2f", p));
+                break;
+            case R.id.btnDown25:
+                if (p > 0) {
+                    p -= 0.25;
+                }
+                price.setText(String.format("%.2f", p));
+                break;
             case R.id.btnAdd:
-                Toast.makeText(this, "Workesfasdfasdfasdf", Toast.LENGTH_SHORT).show();
                 ArrayAdapter<String> lstAdapter;
 
                 lv1 = (ListView) findViewById(R.id.lstCustomize1);
-
-                ArrayList<String> aList = new ArrayList<String>();
 
                 String myName = name.getText().toString();
                 String myPrice = price.getText().toString();
@@ -92,30 +112,30 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
                 if (aList.size() < 8)
                     aList.add(newString);
-
-                SharedPreferences shared = getSharedPreferences("myFile", 0);
-                //int hdd = shared.getInt("hotDogsDaily", 0);
-                //int sd = shared.getInt("sodaDaily", 0);
-                //int cd = shared.getInt("candyDaily", 0);
-                SharedPreferences.Editor e = shared.edit();
-                e.putStringSet("items",aList);
-                e.putInt("hotDogsDaily", hdd + hd);
-                e.putInt("sodaDaily", sd + s);
-                e.putInt("candyDaily", cd + c);
-                e.commit();
-                Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
-                I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
-                //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
-                startActivity(I2);
-
-
-
+                else
+                Toast.makeText(this, "No more than 8 items allowed.", Toast.LENGTH_SHORT).show();
 
                 lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
-
                 lv1.setAdapter(lstAdapter);
 
                 break;
+            case R.id.btnSave:
+                SharedPreferences shared = getSharedPreferences( "myFile", 0);
+                SharedPreferences.Editor e = shared.edit();
+                for (int i = 0; i < aList.size(); i++) {
+                    String next = aList.get(i);
+                    String item = next.substring(0,next.indexOf(","));
+                    String price = next.substring(next.indexOf("$", -1));
+                    e.putString("ItemName" + i, item);
+                    e.putString("ItemPrice" + i, price);
+                }
+                e.commit();
+
+                Intent I = new Intent("com.example.Scott.concessionstand.Main");
+                startActivity(I);
+                finish();
+                break;
+
         }
     }
 }
