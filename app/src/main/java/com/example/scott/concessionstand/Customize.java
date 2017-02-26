@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Toast.makeText(this, "oncreate ran", Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -64,11 +67,13 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         lv1.setOnItemClickListener(this);
 
         ArrayAdapter<String> lstAdapter;
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        int num = sharedNum.getInt("numInList", 0);
+
         SharedPreferences shared = getSharedPreferences("myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
 
         numAtStart = 0;
-        for (int i = 0; i < numInList; i++) {
+        for (int i = 0; i < num; i++) {
             String myName = shared.getString("ItemName"+i, "");
             float myPrice = shared.getFloat("ItemPrice"+i, 0);
 
@@ -117,6 +122,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     public void onClick(View v) {
 
+
         switch(v.getId()) {
             case R.id.btnUp25:
                 p += 0.25;
@@ -156,7 +162,9 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
             case R.id.btnSave:
                 SharedPreferences shared = getSharedPreferences( "myFile", 0);
                 SharedPreferences.Editor e = shared.edit();
-                for (int i = 0; i < numInList+numAtStart; i++) {
+
+
+                for (int i = 0; i < aList.size(); i++) {
                     Toast.makeText(this, "Got into button save for loop", Toast.LENGTH_SHORT).show();
                     String next = aList.get(i);
                     String item = next.substring(0,next.indexOf(","));
@@ -180,20 +188,52 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ArrayAdapter<String> lstAdapter;
+        lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
+        final ArrayAdapter<String> adapter = lstAdapter;
+
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        SharedPreferences.Editor eNum = sharedNum.edit();
+
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("");
+        final int positionToRemove = position;
+        alert.setMessage(aList.get(positionToRemove));
         alert.setCancelable(true);
         alert.setPositiveButton(
                 "Delete",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        aList.remove(id);
-                        dialog.cancel();
+                        aList.remove(positionToRemove);
+                        lv1.setAdapter(adapter);
+                        numInList--;
                     }
                 });
 
-        alert.setNegativeButton(
+        alert.setNeutralButton(
                 "Edit",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        AlertDialog.Builder alertEdit = new AlertDialog.Builder(Customize.this);
+                        final EditText itemN = new EditText(Customize.this);
+                        final TextView itemP = new TextView(Customize.this);
+                        final Button quarter = new Button(Customize.this);
+
+                        //Project=arr[0].toString();
+                        //Item=arr[1].toString();
+
+                        LinearLayout ll = new LinearLayout(Customize.this);
+                        ll.setOrientation(LinearLayout.HORIZONTAL);
+                        ll.addView(itemN);
+                        ll.addView(itemP);
+                        ll.addView(quarter);
+                        alertEdit.setView(ll);
+
+                        dialog.cancel();
+                    }
+                });
+        alert.setNegativeButton(
+                "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -201,6 +241,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                     }
                 });
 
+        eNum.putInt("numInList", numInList+numAtStart);
+        eNum.commit();
         AlertDialog alert11 = alert.create();
         alert11.show();
     }

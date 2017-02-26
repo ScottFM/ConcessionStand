@@ -52,7 +52,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
 
         float sum = 0;
-        for (int i = 0; i < numInList+1; i++) {
+        for (int i = 0; i < numInList; i++) {
             Toast.makeText(this, "got into for loop", Toast.LENGTH_SHORT).show();
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
@@ -60,7 +60,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
 
             if (name != "") {
                 Toast.makeText(this, " + " + name, Toast.LENGTH_SHORT).show();
-                String info = String.format(val + " x " + name + ": $" +"%.2f",(price));
+                String info = String.format(val + " x " + name + ": $" +"%.2f",(price*val));
                 TextView tv = new TextView(this);
                 tv.setText(info);
                 lyt.addView(tv);
@@ -70,6 +70,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
         }
 
         total.setText(String.format("Total: $" + String.valueOf(sum)));
+        totalPrice = sum;
     }
 
 

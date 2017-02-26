@@ -70,25 +70,13 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         SharedPreferences shared = getSharedPreferences("myFile", 0);
         SharedPreferences.Editor e = shared.edit();
 
-        for (int i = 0; i < numInList+num+1; i++) {
-            Toast.makeText(this, "toast in resume loop", Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < numInList; i++) {
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
 
             if (name != "") {
                 UpDownBox newUDB = new UpDownBox(this);
                 newUDB.setItem(name);
-                newUDB.setPrice(price);
-                newUDB.setVal(0);
-                newUDB.setOnValueChangedListener(this);
-
-                udbList.add(newUDB);
-
-                grid.addView(newUDB);
-            }
-            else{
-                UpDownBox newUDB = new UpDownBox(this);
-                newUDB.setItem("Nameless");
                 newUDB.setPrice(price);
                 newUDB.setVal(0);
                 newUDB.setOnValueChangedListener(this);
@@ -150,6 +138,15 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         if (id == R.id.action_Customize) {
             Intent I = new Intent("com.example.Scott.concessionstand.Customize");
             startActivity(I);
+
+            SharedPreferences sharedNum = getSharedPreferences("num", 0);
+            SharedPreferences.Editor eNum = sharedNum.edit();
+
+            int numInList = grid.getChildCount();
+
+            eNum.putInt("numInList", numInList);
+            eNum.commit();
+
             //finish();
             return true;
         }
