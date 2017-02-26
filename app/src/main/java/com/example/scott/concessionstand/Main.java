@@ -50,45 +50,32 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
         setUpItems();
 
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
-
         clear.setOnClickListener(this);
         total.setOnClickListener(this);
-
-        for (int i = 0; i < numInList; i++) {
-            String name = shared.getString("ItemName" + Integer.toString(i), "");
-            float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-
-            if (name != "") {
-                Toast.makeText(this, "worked in OnCreate + " + name, Toast.LENGTH_SHORT).show();
-                UpDownBox newUDB = new UpDownBox(this);
-                newUDB.setItem(name);
-                newUDB.setPrice(price);
-                newUDB.setVal(0);
-                newUDB.setOnValueChangedListener(this);
-
-                udbList.add(newUDB);
-
-                grid.addView(newUDB);
-            }
-        }
-
-        rt.setText(String.format("Running Total - $0.00"));
     }
 
-    /*@Override
+    @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
 
-        for (int i = 0; i < numInList; i++) {
+        int num = grid.getChildCount();
+
+        if (grid.getChildCount() > 0) { //Removes all items in the layout
+            grid.removeAllViews();
+        }
+
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        int numInList = sharedNum.getInt("numInList", 0);
+
+        SharedPreferences shared = getSharedPreferences("myFile", 0);
+        SharedPreferences.Editor e = shared.edit();
+
+        for (int i = 0; i < numInList+num+1; i++) {
+            Toast.makeText(this, "toast in resume loop", Toast.LENGTH_SHORT).show();
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
 
             if (name != "") {
-                Toast.makeText(this, "worked in onResume+ " + name, Toast.LENGTH_SHORT).show();
                 UpDownBox newUDB = new UpDownBox(this);
                 newUDB.setItem(name);
                 newUDB.setPrice(price);
@@ -99,9 +86,23 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
                 grid.addView(newUDB);
             }
-        }
-    }*/
+            else{
+                UpDownBox newUDB = new UpDownBox(this);
+                newUDB.setItem("Nameless");
+                newUDB.setPrice(price);
+                newUDB.setVal(0);
+                newUDB.setOnValueChangedListener(this);
 
+                udbList.add(newUDB);
+
+                grid.addView(newUDB);
+            }
+            e.putString("ItemName" + i, name);
+            e.putFloat("ItemPrice" + i, price);
+
+            e.commit();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,29 +111,33 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         return true;
     }
 
-    protected void onSaveInstanceState(Bundle savedInstance) {  //this function lets you save the info if you rotate the phone or pause the activity
+    /*protected void onSaveInstanceState(Bundle savedInstance) {  //this function lets you save the info if you rotate the phone or pause the activity
         for (int i = 0; i < udbList.size(); i++) {
-            savedInstance.putInt("ud" + i, udbList.get(i).returnVal());
+            savedInstance.putString("ItemName"+i, udbList.get(i).returnItem());
+            savedInstance.putFloat("ItemPrice" + i, udbList.get(i).returnPrice());
+            savedInstance.putInt("ItemQuantity"+i, udbList.get(i).returnVal());
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onRestoreInstanceState(Bundle savedInstance) {  //opens the saved info from previous function
 
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        int numInList = sharedNum.getInt("numInList", 0);
+
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
 
         float sum = 0;
 
         for (int i = 0; i < numInList; i++) {
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-            int val = udbList.get(i).returnVal();
+            int val = shared.getInt("ItemQuantity", 0);
 
             sum += price * val;
         }
 
         rt.setText(String.format("Running Total - $" + "%.2f",sum));
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -170,25 +175,18 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
                 rt.setText(String.format("Running Total - $0.00"));
                 break;
             case R.id.btnTotal:
-                SharedPreferences shared = getSharedPreferences( "myFile", 0);
-                int numInList = shared.getInt("numInList",0);
+                SharedPreferences shared = getSharedPreferences("myFile", 0);
                 SharedPreferences.Editor e = shared.edit();
 
-                for (int i = 0; i < numInList; i++) {
-                    String name = shared.getString("ItemName", "");
-                    float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-                    int quantity = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
-
-                    e.putString("ItemName" + i, name);
-                    e.putFloat("ItemPrice" + i, price);
-                    numInList++;
-                    e.putInt("numInList", numInList);
+                for (int i = 0; i < udbList.size(); i++) {
+                    int quantity = udbList.get(i).returnVal();
+                    e.putInt("ItemQuantity" + i, quantity);
+                    e.commit();
                 }
-                e.commit();
 
                 Intent I = new Intent("com.example.Scott.concessionstand.TotalPage");
-                startActivityForResult(I, 1);
-                finish();
+                startActivity(I);
+                //finish();
                 break;
         }
 
@@ -199,14 +197,17 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
     @Override
     public void onValueChanged(View v) {
+
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        int numInList = sharedNum.getInt("numInList", 0);
+
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
 
         float sum = 0;
 
-        for (int i = 0; i < numInList; i++) {
+        for (int i = 0; i < numInList+1; i++) {
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-            int val = udbList.get(i).returnVal();
+            int val = shared.getInt("ItemQuantity" + i, 0);
 
             sum += price * val;
         }

@@ -1,17 +1,20 @@
 package com.example.scott.concessionstand;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 
 import static android.R.attr.id;
 
-public class Customize extends AppCompatActivity implements View.OnClickListener {
+public class Customize extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     Button b, bUp25, bDown25,btnSave;
     EditText name;
@@ -33,6 +36,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     ArrayList<String> aList = new ArrayList<String>();
     double p = 0;
     int numInList = 0;
+    private int numAtStart = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,29 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
+
+        lv1 = (ListView) findViewById(R.id.lstCustomize1);
+        lv1.setOnItemClickListener(this);
+
+        ArrayAdapter<String> lstAdapter;
+        SharedPreferences shared = getSharedPreferences("myFile", 0);
+        int numInList = shared.getInt("numInList", 0);
+
+        numAtStart = 0;
+        for (int i = 0; i < numInList; i++) {
+            String myName = shared.getString("ItemName"+i, "");
+            float myPrice = shared.getFloat("ItemPrice"+i, 0);
+
+            String newString= new String(myName + ", $" + myPrice);
+
+            if(myName != "")
+                aList.add(newString);
+
+            lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
+            lv1.setAdapter(lstAdapter);
+
+            numAtStart++;
+        }
     }
 
     @Override
@@ -104,17 +131,23 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
             case R.id.btnAdd:
                 ArrayAdapter<String> lstAdapter;
 
-                lv1 = (ListView) findViewById(R.id.lstCustomize1);
-
                 String myName = name.getText().toString();
                 String myPrice = price.getText().toString();
 
                 String newString= new String(myName + ", $" + myPrice);
 
-                if (aList.size() < 8)
-                    aList.add(newString);
+                if (aList.size() < 8) {
+                    if (myName != "") {
+                        aList.add(newString);
+                        numInList++;
+                    }
+                    else if (myName == "") {
+                        aList.remove(newString);
+                    }
+                }
                 else
-                Toast.makeText(this, "No more than 8 items allowed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No more than 8 items allowed.", Toast.LENGTH_SHORT).show();
+
 
                 lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
                 lv1.setAdapter(lstAdapter);
@@ -123,24 +156,53 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
             case R.id.btnSave:
                 SharedPreferences shared = getSharedPreferences( "myFile", 0);
                 SharedPreferences.Editor e = shared.edit();
-                if (aList.size() > 0) {
-                    for (int i = 0; i < aList.size(); i++) {
-                        String next = aList.get(i);
-                        String item = next.substring(0,next.indexOf(","));
-                        float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
-                        e.putString("ItemName" + i, item);
-                        e.putFloat("ItemPrice" + i, price);
-                        numInList++;
-                        e.putInt("numInList", numInList);
-                    }
+                for (int i = 0; i < numInList+numAtStart; i++) {
+                    Toast.makeText(this, "Got into button save for loop", Toast.LENGTH_SHORT).show();
+                    String next = aList.get(i);
+                    String item = next.substring(0,next.indexOf(","));
+                    float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
+                    e.putString("ItemName" + i, item);
+                    e.putFloat("ItemPrice" + i, price);
                     e.commit();
                 }
 
-                Intent I = new Intent("com.example.Scott.concessionstand.Main");
-                startActivity(I);
+                SharedPreferences sharedNum = getSharedPreferences("num", 0);
+                SharedPreferences.Editor eNum = sharedNum.edit();
+                eNum.putInt("numInList", numInList+numAtStart);
+                eNum.commit();
+                //Intent I = new Intent("com.example.Scott.concessionstand.Main");
+                //startActivity(I);
                 finish();
                 break;
 
         }
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("");
+        alert.setCancelable(true);
+        alert.setPositiveButton(
+                "Delete",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        aList.remove(id);
+                        dialog.cancel();
+                    }
+                });
+
+        alert.setNegativeButton(
+                "Edit",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = alert.create();
+        alert11.show();
+    }
 }
+

@@ -28,7 +28,6 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
     TextView total;
     TextView cashBack;
     EditText OutOf;
-    String totalP;
     float totalPrice = 0;
     Button cancel;
     Button done;
@@ -37,6 +36,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_total_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,25 +44,32 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
         setUp();
 
         OutOf.setOnEditorActionListener(this);
-        lyt = (LinearLayout) findViewById(R.id.lytTop);
+
+
+        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+        int numInList = sharedNum.getInt("numInList", 0);
 
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int numInList = shared.getInt("numInList", 0);
 
-        for (int i = 0; i < numInList; i++) {
+        float sum = 0;
+        for (int i = 0; i < numInList+1; i++) {
+            Toast.makeText(this, "got into for loop", Toast.LENGTH_SHORT).show();
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
             int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
 
             if (name != "") {
-                //Toast.makeText(this, "worked in OnCreate + " + name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, " + " + name, Toast.LENGTH_SHORT).show();
                 String info = String.format(val + " x " + name + ": $" +"%.2f",(price));
                 TextView tv = new TextView(this);
-
                 tv.setText(info);
                 lyt.addView(tv);
+
+                sum += price*val;
             }
         }
+
+        total.setText(String.format("Total: $" + String.valueOf(sum)));
     }
 
 
@@ -76,6 +83,8 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
 
         done = (Button) findViewById(R.id.btnDone);
         done.setOnClickListener(this);
+
+        lyt = (LinearLayout) this.findViewById(R.id.lytTop);
     }
 
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -111,15 +120,6 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                 startActivity(I);
                 break;
             case R.id.btnDone:
-                SharedPreferences shared = getSharedPreferences("myFile", 0);
-                /*int hdd = shared.getInt("hotDogsDaily", 0);
-                int sd = shared.getInt("sodaDaily", 0);
-                int cd = shared.getInt("candyDaily", 0);
-                SharedPreferences.Editor e = shared.edit();
-                e.putInt("hotDogsDaily", hdd + hd);
-                e.putInt("sodaDaily", sd + s);
-                e.putInt("candyDaily", cd + c);
-                e.commit();*/
                 Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
                 I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
                 //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
