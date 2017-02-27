@@ -14,116 +14,10 @@
     tools:showIn="@layout/activity_daily_total">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="62dp"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtNumHotDogDT"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:hint="0" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtNumSodaDT"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:hint="0" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtNumCandyDT"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:hint="0" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <TextView
-                android:text="Hot dogs:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtHotDogDT"
-                android:textSize="30sp"
-                android:textAlignment="viewStart" />
-
-            <TextView
-                android:text="Sodas:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtSodaDT"
-                android:textSize="30sp"
-                android:textAlignment="viewStart" />
-
-            <TextView
-                android:text="Candies:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtCandyDT"
-                android:textSize="30sp"
-                android:textAlignment="viewStart" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtHotDogRev"
-                android:textAlignment="textEnd"
-                android:textSize="30sp"
-                android:hint="$0.00" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtSodaRev"
-                android:textAlignment="textEnd"
-                android:textSize="30sp"
-                android:hint="$0.00" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtCandyRev"
-                android:textAlignment="textEnd"
-                android:textSize="30sp"
-                android:hint="$0.00" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtDailyRev"
-        android:textSize="30sp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:hint="$0.00" />
+        android:id="@+id/lytTable"></LinearLayout>
 
     <Button
         android:text="Reset Daily Totals"
@@ -132,5 +26,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/btnReset" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtDailyRev"
+        android:textSize="30sp"
+        android:hint="$0.00"
+        android:layout_above="@+id/btnReset"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="36dp" />
 
 </RelativeLayout>

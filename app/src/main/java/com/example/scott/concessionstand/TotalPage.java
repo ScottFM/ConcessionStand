@@ -32,6 +32,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
     Button cancel;
     Button done;
     LinearLayout lyt;
+    int z = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,25 +52,35 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
 
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
 
+        SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
+        SharedPreferences.Editor eDaily = sharedDaily.edit();
+
         float sum = 0;
+        z = sharedDaily.getInt("NumItems", 0);
+
         for (int i = 0; i < numInList; i++) {
-            Toast.makeText(this, "got into for loop", Toast.LENGTH_SHORT).show();
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
             int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
 
-            if (name != "") {
-                Toast.makeText(this, " + " + name, Toast.LENGTH_SHORT).show();
+            if (name != "" && val > 0) {
                 String info = String.format(val + " x " + name + ": $" +"%.2f",(price*val));
                 TextView tv = new TextView(this);
                 tv.setText(info);
                 lyt.addView(tv);
 
                 sum += price*val;
+
+                eDaily.putString(name+"name", name);
+                eDaily.putInt(name+"val", val);
+                eDaily.putFloat(name+"price", price);
+                z++;
+                eDaily.putInt("NumItems", z);
+                eDaily.commit();
             }
         }
 
-        total.setText(String.format("Total: $" + String.valueOf(sum)));
+        total.setText(String.format("Total: $" + "%.2f", sum));
         totalPrice = sum;
     }
 
@@ -122,6 +133,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                 break;
             case R.id.btnDone:
                 Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
+
                 I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
                 //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
                 startActivity(I2);

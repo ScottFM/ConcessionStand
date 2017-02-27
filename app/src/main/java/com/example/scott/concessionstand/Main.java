@@ -99,34 +99,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         return true;
     }
 
-    /*protected void onSaveInstanceState(Bundle savedInstance) {  //this function lets you save the info if you rotate the phone or pause the activity
-        for (int i = 0; i < udbList.size(); i++) {
-            savedInstance.putString("ItemName"+i, udbList.get(i).returnItem());
-            savedInstance.putFloat("ItemPrice" + i, udbList.get(i).returnPrice());
-            savedInstance.putInt("ItemQuantity"+i, udbList.get(i).returnVal());
-        }
-    }*/
-
-    /*@Override
-    public void onRestoreInstanceState(Bundle savedInstance) {  //opens the saved info from previous function
-
-        SharedPreferences sharedNum = getSharedPreferences("num", 0);
-        int numInList = sharedNum.getInt("numInList", 0);
-
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);
-
-        float sum = 0;
-
-        for (int i = 0; i < numInList; i++) {
-            float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-            int val = shared.getInt("ItemQuantity", 0);
-
-            sum += price * val;
-        }
-
-        rt.setText(String.format("Running Total - $" + "%.2f",sum));
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -203,7 +175,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
         float sum = 0;
 
         for (int i = 0; i < numInList; i++) {
-            float price = udbList.get(i).returnPrice();
+            float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
             int val = udbList.get(i).returnVal();
 
             sum += price * val;

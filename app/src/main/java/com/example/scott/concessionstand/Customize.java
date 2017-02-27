@@ -42,7 +42,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this, "oncreate ran", Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,7 +140,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                 String myPrice = price.getText().toString();
 
                 String newString= new String();
-                newString = String.format(myName + ", $" + "%.2f", myPrice);
+                newString = String.format(myName + ", $" + "%.2f", (myPrice));
 
                 if (aList.size() < 8) {
                     if (myName != "") {
@@ -166,7 +165,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
 
                 for (int i = 0; i < aList.size(); i++) {
-                    Toast.makeText(this, "Got into button save for loop", Toast.LENGTH_SHORT).show();
                     String next = aList.get(i);
                     String item = next.substring(0,next.indexOf(","));
                     float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
@@ -252,11 +250,10 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                         dialog.cancel();
                     }
                 });
+        alert.show();
 
         eNum.putInt("numInList", numInList+numAtStart);
         eNum.commit();
-        AlertDialog alert11 = alert.create();
-        alert11.show();
     }
 }
 

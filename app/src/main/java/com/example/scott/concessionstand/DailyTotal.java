@@ -1,24 +1,32 @@
 package com.example.scott.concessionstand;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class DailyTotal extends AppCompatActivity implements View.OnClickListener {
 
-    TextView txtNumHotDogsDaily, txtNumSodaDaily, txtNumCandyDaily, txtdailyrev;
-    TextView hdRev, sRev, cRev;
+    LinearLayout lyt;
+    TextView txtdailyrev;
     Button reset;
+    float totalPrice;
+
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -28,27 +36,40 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        txtNumHotDogsDaily = (TextView) findViewById(R.id.txtNumHotDogDT);
-        txtNumSodaDaily = (TextView) findViewById(R.id.txtNumSodaDT);
-        txtNumCandyDaily = (TextView) findViewById(R.id.txtNumCandyDT);
-        hdRev = (TextView) findViewById(R.id.txtHotDogRev);
-        sRev = (TextView) findViewById(R.id.txtSodaRev);
-        cRev = (TextView) findViewById(R.id.txtCandyRev);
         txtdailyrev = (TextView) findViewById(R.id.txtDailyRev);
+        lyt = (LinearLayout) findViewById(R.id.lytTable);
+
         reset = (Button) findViewById(R.id.btnReset);
         reset.setOnClickListener(this);
 
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        int hdd = shared.getInt("hotDogsDaily", 0);
-        int sd = shared.getInt("sodaDaily", 0);
-        int cd = shared.getInt("candyDaily", 0);
-        txtNumHotDogsDaily.setText(Integer.toString(hdd));
-        txtNumSodaDaily.setText(Integer.toString(sd));
-        txtNumCandyDaily.setText(Integer.toString(cd));
-        hdRev.setText(String.format("$" + "%.2f",(hdd*1.50)));
-        sRev.setText(String.format("$" + "%.2f",(sd*1.0)));
-        cRev.setText(String.format("$" + "%.2f",(cd*.75)));
-        txtdailyrev.setText(String.format("$" + "%.2f",(hdd*1.50)+(sd*1)+(cd*0.75)));
+        SharedPreferences shared = getSharedPreferences("ItemsDaily", 0);
+        int numItems = shared.getInt("NumItems",0);
+
+        for (int i = 0; i < numItems; i++) {
+            String name = shared.getString("ItemName"+i, "");
+            float price = shared.getFloat("ItemPrice"+i, 0);
+            int quantity = shared.getInt("ItemQuantity"+i, 0);
+
+            TextView tvQ = new TextView(this);
+            TextView tvN = new TextView(this);
+            TextView tvP = new TextView(this);
+
+            tvQ.setText(String.valueOf(quantity));
+            tvN.setText(name);
+            tvP.setText(String.format("$" + "%.2f", price));
+
+            LinearLayout llHorizontal = new LinearLayout(this);
+            llHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+
+            llHorizontal.addView(tvQ, 200, 100);
+            llHorizontal.addView(tvN, 600, 100);
+            llHorizontal.addView(tvP, 400, 100);
+            lyt.addView(llHorizontal);
+
+            totalPrice += quantity*price;
+        }
+
+        txtdailyrev.setText(String.format("Daily profit: $" + "%.2f", totalPrice));
 
     }
 
@@ -85,23 +106,38 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);  //Reset the shared values to 0;
-        int hdd = 0;
-        int sd = 0;
-        int cd = 0;
-        SharedPreferences.Editor e = shared.edit();
-        e.putInt("hotDogsDaily", hdd);
-        e.putInt("sodaDaily", sd);
-        e.putInt("candyDaily", cd);
-        e.commit();
 
-        txtNumHotDogsDaily.setText(Integer.toString(hdd));              //Reset the textviews to display 0
-        txtNumSodaDaily.setText(Integer.toString(sd));
-        txtNumCandyDaily.setText(Integer.toString(cd));
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("Clear all values?");
+        alert.setCancelable(true);
+        alert.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SharedPreferences sharedNum = getSharedPreferences("num", 0);
+                        int numInList = sharedNum.getInt("numInList", 0);
 
-        hdRev.setText(String.format("$" + "%.2f",(hdd*1.50)));          //Reset the textviews to display 0
-        sRev.setText(String.format("$" + "%.2f",(sd*1.0)));
-        cRev.setText(String.format("$" + "%.2f",(cd*.75)));
-        txtdailyrev.setText(String.format("$" + "%.2f",(hdd*1.50)+(sd*1)+(cd*0.75)));
+                        SharedPreferences shared = getSharedPreferences( "myFile", 0);
+
+                        lyt.removeAllViews();
+                        txtdailyrev.setText("Daily profit: $0.00");
+
+                        SharedPreferences sharedDaily = getSharedPreferences( "ItemsDaily", 0);
+                        SharedPreferences.Editor eDaily = sharedDaily.edit();
+
+                        eDaily.putInt("NumIxtems", 0);
+                        eDaily.commit();
+
+                    }
+                });
+        alert.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        alert.show();
     }
 }
