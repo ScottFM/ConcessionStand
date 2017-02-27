@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DailyTotal extends AppCompatActivity implements View.OnClickListener {
 
     LinearLayout lyt;
@@ -43,12 +46,15 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
         reset.setOnClickListener(this);
 
         SharedPreferences shared = getSharedPreferences("ItemsDaily", 0);
-        int numItems = shared.getInt("NumItems",0);
+        Set<String> stringSet = shared.getStringSet("set", new HashSet<String>());
+
+        String[] setArray = stringSet.toArray(new String[0]);
+        int numItems = stringSet.size();
 
         for (int i = 0; i < numItems; i++) {
-            String name = shared.getString("ItemName"+i, "");
-            float price = shared.getFloat("ItemPrice"+i, 0);
-            int quantity = shared.getInt("ItemQuantity"+i, 0);
+            String name = setArray[i];
+            float price = shared.getFloat(setArray[i]+"price", 0);
+            int quantity = shared.getInt(setArray[i]+"val", 0);
 
             TextView tvQ = new TextView(this);
             TextView tvN = new TextView(this);
@@ -115,9 +121,11 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         SharedPreferences sharedNum = getSharedPreferences("num", 0);
+                        SharedPreferences.Editor eNum = sharedNum.edit();
                         int numInList = sharedNum.getInt("numInList", 0);
 
                         SharedPreferences shared = getSharedPreferences( "myFile", 0);
+                        SharedPreferences.Editor e = shared.edit();
 
                         lyt.removeAllViews();
                         txtdailyrev.setText("Daily profit: $0.00");
@@ -125,7 +133,7 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
                         SharedPreferences sharedDaily = getSharedPreferences( "ItemsDaily", 0);
                         SharedPreferences.Editor eDaily = sharedDaily.edit();
 
-                        eDaily.putInt("NumIxtems", 0);
+                        eDaily.clear();
                         eDaily.commit();
 
                     }

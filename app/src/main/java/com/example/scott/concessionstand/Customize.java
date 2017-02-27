@@ -26,7 +26,10 @@ import android.widget.Toast;
 
 import java.sql.BatchUpdateException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import static android.R.attr.editorExtras;
 import static android.R.attr.id;
 
 public class Customize extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
@@ -39,6 +42,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     double p = 0;
     int numInList = 0;
     private int numAtStart = 0;
+    Set<String> stringSet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,18 +70,35 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         lv1 = (ListView) findViewById(R.id.lstCustomize1);
         lv1.setOnItemClickListener(this);
 
+        stringSet = new HashSet<String>();
+
         ArrayAdapter<String> lstAdapter;
         SharedPreferences sharedNum = getSharedPreferences("num", 0);
         int num = sharedNum.getInt("numInList", 0);
 
-        SharedPreferences shared = getSharedPreferences("myFile", 0);
+        SharedPreferences shared = getSharedPreferences( "myFile", 0);
+        SharedPreferences.Editor e = shared.edit();
+
+        SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
+        SharedPreferences.Editor eDaily = sharedDaily.edit();
+
+        stringSet = sharedDaily.getStringSet("set", new HashSet<String>());
+
+        for (int i = 0; i < aList.size(); i++) {
+            String next = aList.get(i);
+            String item = next.substring(0,next.indexOf(","));
+            float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
+
+            stringSet.add(item);
+        }
+        eDaily.commit();
 
         numAtStart = 0;
         for (int i = 0; i < num; i++) {
             String myName = shared.getString("ItemName"+i, "");
             float myPrice = shared.getFloat("ItemPrice"+i, 0);
 
-            String newString= new String(myName + ", $" + myPrice);
+            String newString= new String(String.format(myName + ", $" + "%.2f", myPrice));
 
             if(myName != "")
                 aList.add(newString);
@@ -137,7 +159,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                 ArrayAdapter<String> lstAdapter;
 
                 String myName = name.getText().toString();
-                String myPrice = price.getText().toString();
+                float myPrice = Float.parseFloat(price.getText().toString());
 
                 String newString= new String();
                 newString = String.format(myName + ", $" + "%.2f", (myPrice));
@@ -160,20 +182,32 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
                 break;
             case R.id.btnSave:
+                SharedPreferences sharedNum = getSharedPreferences( "num", 0);
+                int num = sharedNum.getInt("numInList", 0);
+
                 SharedPreferences shared = getSharedPreferences( "myFile", 0);
                 SharedPreferences.Editor e = shared.edit();
 
+                SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
+                SharedPreferences.Editor eDaily = sharedDaily.edit();
 
+                e.clear();
                 for (int i = 0; i < aList.size(); i++) {
                     String next = aList.get(i);
-                    String item = next.substring(0,next.indexOf(","));
+                    String name = next.substring(0,next.indexOf(","));
                     float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
-                    e.putString("ItemName" + i, item);
-                    e.putFloat("ItemPrice" + i, price);
-                    e.commit();
-                }
 
-                SharedPreferences sharedNum = getSharedPreferences("num", 0);
+                    e.putString("ItemName"+i, name);
+                    e.putFloat("ItemPrice"+i, price);
+                    e.commit();
+
+                    stringSet.add(name);
+
+
+                }
+                eDaily.putStringSet("set", stringSet);
+                eDaily.commit();
+
                 SharedPreferences.Editor eNum = sharedNum.edit();
                 eNum.putInt("numInList", numInList+numAtStart);
                 eNum.commit();

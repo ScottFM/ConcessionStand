@@ -58,6 +58,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
     public void onResume() {
         super.onResume();
 
+        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+
         int num = grid.getChildCount();
 
         if (grid.getChildCount() > 0) { //Removes all items in the layout

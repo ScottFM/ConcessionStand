@@ -23,6 +23,11 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static android.R.attr.name;
+
 public class TotalPage extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
     TextView total;
@@ -46,37 +51,28 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
 
         OutOf.setOnEditorActionListener(this);
 
-
         SharedPreferences sharedNum = getSharedPreferences("num", 0);
         int numInList = sharedNum.getInt("numInList", 0);
 
+        SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
+
         SharedPreferences shared = getSharedPreferences( "myFile", 0);
 
-        SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
-        SharedPreferences.Editor eDaily = sharedDaily.edit();
-
         float sum = 0;
-        z = sharedDaily.getInt("NumItems", 0);
+        //z = sharedDaily.getInt("NumItems", 0);
 
         for (int i = 0; i < numInList; i++) {
             String name = shared.getString("ItemName" + Integer.toString(i), "");
             float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
             int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
 
-            if (name != "" && val > 0) {
-                String info = String.format(val + " x " + name + ": $" +"%.2f",(price*val));
+            if (name != "") {
+                String info = String.format(val + " x " + name + ": $" + "%.2f", (price * val));
                 TextView tv = new TextView(this);
                 tv.setText(info);
                 lyt.addView(tv);
 
-                sum += price*val;
-
-                eDaily.putString(name+"name", name);
-                eDaily.putInt(name+"val", val);
-                eDaily.putFloat(name+"price", price);
-                z++;
-                eDaily.putInt("NumItems", z);
-                eDaily.commit();
+                sum += price * val;
             }
         }
 
@@ -134,7 +130,31 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
             case R.id.btnDone:
                 Intent I2 = new Intent("com.example.Scott.concessionstand.Main");
 
-                I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
+                SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
+                SharedPreferences.Editor eDaily = sharedDaily.edit();
+                Set<String> stringSet = new HashSet<String>();
+                stringSet = sharedDaily.getStringSet("set", new HashSet<String>());
+
+                SharedPreferences shared = getSharedPreferences( "myFile", 0);
+
+                for (int i = 0; i < lyt.getChildCount(); i++) {
+                    String name = shared.getString("ItemName" + Integer.toString(i), "");
+                    float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
+                    int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
+
+                    stringSet.add(name);
+
+                    int newVal = sharedDaily.getInt(name+"val", 0);
+                    newVal += val;
+                    eDaily.putInt(name+"val", newVal);
+                    eDaily.putFloat(name+"price", price);
+
+                }
+                eDaily.putStringSet("set", stringSet);
+                eDaily.commit();
+
+                //gave problems for me with shared preferences
+                //I2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //This line allows the cancel button to clear the whole stack.
                 //After clicking cancel, if you press the back button on the main activity, it will exit the app. That's how I want it.
                 startActivity(I2);
                 break;
