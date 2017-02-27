@@ -140,7 +140,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                 String myName = name.getText().toString();
                 String myPrice = price.getText().toString();
 
-                String newString= new String(myName + ", $" + myPrice);
+                String newString= new String();
+                newString = String.format(myName + ", $" + "%.2f", myPrice);
 
                 if (aList.size() < 8) {
                     if (myName != "") {
@@ -187,7 +188,7 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         ArrayAdapter<String> lstAdapter;
         lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
         final ArrayAdapter<String> adapter = lstAdapter;
@@ -209,30 +210,41 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                     }
                 });
 
-        alert.setNeutralButton(
+        alert.setNegativeButton(
                 "Edit",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         AlertDialog.Builder alertEdit = new AlertDialog.Builder(Customize.this);
                         final EditText itemN = new EditText(Customize.this);
-                        final TextView itemP = new TextView(Customize.this);
-                        final Button quarter = new Button(Customize.this);
+                        final EditText itemP = new EditText(Customize.this);
+                        final View view;
 
-                        //Project=arr[0].toString();
-                        //Item=arr[1].toString();
+                        itemN.setText(aList.get(position).substring(0,aList.get(position).indexOf(",")));
+                        itemP.setText(aList.get(position).substring(aList.get(position).indexOf("$")+1));
 
                         LinearLayout ll = new LinearLayout(Customize.this);
                         ll.setOrientation(LinearLayout.HORIZONTAL);
                         ll.addView(itemN);
                         ll.addView(itemP);
-                        ll.addView(quarter);
                         alertEdit.setView(ll);
+
+
+                        alertEdit.setCancelable(false);
+                        alertEdit.setPositiveButton("Update",  new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                aList.set(position, String.format(itemN.getText().toString() + ", $" + "%.2f", Float.parseFloat(itemP.getText().toString())));
+                                lv1.setAdapter(adapter);
+                            }
+                        });
+
+                        AlertDialog alert = alertEdit.create();
+                        alert.show();
 
                         dialog.cancel();
                     }
                 });
-        alert.setNegativeButton(
+        alert.setNeutralButton(
                 "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

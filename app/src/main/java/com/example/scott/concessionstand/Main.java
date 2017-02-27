@@ -202,9 +202,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
         float sum = 0;
 
-        for (int i = 0; i < numInList+1; i++) {
-            float price = shared.getFloat("ItemPrice" + Integer.toString(i), 0);
-            int val = shared.getInt("ItemQuantity" + i, 0);
+        for (int i = 0; i < numInList; i++) {
+            float price = udbList.get(i).returnPrice();
+            int val = udbList.get(i).returnVal();
 
             sum += price * val;
         }
