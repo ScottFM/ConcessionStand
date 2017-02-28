@@ -40,7 +40,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     ListView lv1;
     ArrayList<String> aList;
     double p = 0;
-    private int numAtStart = 0;
     Set<String> stringSet;
 
     SharedPreferences sharedNum;
@@ -74,7 +73,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         }
         eDaily.commit();
 
-        numAtStart = 0;
         for (int i = 0; i < numInList; i++) {
             String myName = shared.getString("ItemName"+i, "");
             float myPrice = shared.getFloat("ItemPrice"+i, 0);
@@ -86,8 +84,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
             lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
             lv1.setAdapter(lstAdapter);
-
-            numAtStart++;
         }
     }
 
@@ -138,8 +134,16 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
             case R.id.btnAdd:
                 ArrayAdapter<String> lstAdapter;
 
-                String myName = name.getText().toString();
-                float myPrice = Float.parseFloat(price.getText().toString());
+                String myName;
+                float myPrice;
+                if (!price.getText().toString().isEmpty() && !name.getText().toString().isEmpty()) {
+                    myName = name.getText().toString();
+                    myPrice = Float.parseFloat(price.getText().toString());
+                }
+                else {
+                    myName = "";
+                    myPrice = 0;
+                }
 
                 String newString= new String();
                 newString = String.format(myName + ", $" + "%.2f", (myPrice));
@@ -170,11 +174,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                     float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
 
                     e.putString("ItemName"+i, name);
-                    //eDaily.putString("ItemName"+i, name);
                     e.putFloat("ItemPrice"+i, price);
-                    //eDaily.putFloat("ItemPrice"+i, price);
                     e.commit();
-                    //eDaily.commit();
 
                     stringSet.add(name);
                 }
@@ -218,9 +219,13 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int id) {
 
                         AlertDialog.Builder alertEdit = new AlertDialog.Builder(Customize.this);
+                        alertEdit.setMessage("Edit name or price here.");
                         final EditText itemN = new EditText(Customize.this);
                         final EditText itemP = new EditText(Customize.this);
                         final View view;
+
+                        itemN.setInputType(InputType.TYPE_CLASS_TEXT);
+                        itemP.setInputType(InputType.TYPE_CLASS_NUMBER);
 
                         itemN.setText(aList.get(position).substring(0,aList.get(position).indexOf(",")));
                         itemP.setText(aList.get(position).substring(aList.get(position).indexOf("$")+1));
@@ -235,7 +240,13 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                         alertEdit.setCancelable(false);
                         alertEdit.setPositiveButton("Update",  new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                aList.set(position, String.format(itemN.getText().toString() + ", $" + "%.2f", Float.parseFloat(itemP.getText().toString())));
+                                if (!itemP.getText().toString().isEmpty()) {
+                                    float price = roundToNearest25(Float.parseFloat(itemP.getText().toString()));
+                                    aList.set(position, String.format(itemN.getText().toString() + ", $" + "%.2f", price));
+                                }
+                                else {
+                                    aList.set(position, itemN.getText().toString() + ", $0.00");
+                                }
                                 lv1.setAdapter(adapter);
                             }
                         });
@@ -256,8 +267,22 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                 });
         alert.show();
 
-        eNum.putInt("numInList", numInList+numAtStart);
+        eNum.putInt("numInList", numInList);
         eNum.commit();
+    }
+
+    public float roundToNearest25( float f) {
+        double temp = f%0.25;
+        if (temp >= 0.125)
+        {
+            f += 0.25-temp;
+            Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
+        }
+        else if (temp < 0.12){
+            f-=temp;
+            Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
+        }
+        return f;
     }
 }
 

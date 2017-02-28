@@ -75,9 +75,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
     @Override
     public void onResume() {
         super.onResume();
-
-        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
-
         setUDBs();
     }
 
@@ -101,15 +98,16 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
                 newUDB.setPrice(price);
                 newUDB.setVal(quantity);
 
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.setMargins(80, 50, 80, 50);
+                newUDB.setLayoutParams(params);
 
                 udbList[i] = newUDB;
-
                 grid.addView(newUDB);
-
                 sum += price * quantity;
+                udbList[i].setOnValueChangedListener(this);
             }
 
-            udbList[i].setOnValueChangedListener(this);
             e.putString("ItemName" + i, name);
             e.putFloat("ItemPrice" + i, price);
 

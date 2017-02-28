@@ -149,6 +149,8 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                     int val = shared.getInt("ItemQuantity" + Integer.toString(i), 0);
 
                     stringSet.add(name);
+                    e.putInt("ItemQuantity"+i, 0);
+
 
                     int newVal = sharedDaily.getInt(name + "val", 0);
                     newVal += val;
@@ -156,6 +158,7 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                     eDaily.putFloat(name + "price", price);
 
                 }
+                e.commit();
                 eDaily.putStringSet("set", stringSet);
                 eDaily.commit();
 
