@@ -19,15 +19,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtRunningTotal"
-        android:layout_alignBaseline="@+id/btnClear"
-        android:layout_alignBottom="@+id/btnClear"
+        android:layout_alignBaseline="@+id/btnSave"
+        android:layout_alignBottom="@+id/btnSave"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnClear"
+        android:id="@+id/btnSave"
         android:background="@color/CoeTertiary"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -52,7 +52,7 @@
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="false"
-        android:layout_above="@+id/btnClear"
+        android:layout_above="@+id/btnSave"
         android:alignmentMode="alignMargins">
 
     </GridLayout>

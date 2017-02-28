@@ -1,29 +1,18 @@
 package com.example.scott.concessionstand;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.text.DecimalFormat;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends AppCompatActivity implements View.OnClickListener, onValueChangedListener {
 
@@ -43,7 +32,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
 
     public void setUpItems() {
         rt = (TextView) findViewById(R.id.txtRunningTotal);
-        clear = (Button) findViewById(R.id.btnClear);
+        clear = (Button) findViewById(R.id.btnSave);
         total = (Button) findViewById(R.id.btnTotal);
         grid = (GridLayout) findViewById(R.id.grdLayout);
 
@@ -92,26 +81,39 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
             float price = shared.getFloat("ItemPrice" +i, 0);
             int quantity = shared.getInt("ItemQuantity" + i, 0);
 
-            if (name != "" && price != 0) {
-                UpDownBox newUDB = new UpDownBox(this);
-                newUDB.setItem(name);
-                newUDB.setPrice(price);
-                newUDB.setVal(quantity);
 
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.setMargins(80, 50, 80, 50);
-                newUDB.setLayoutParams(params);
+            UpDownBox newUDB = new UpDownBox(this);
+            newUDB.setItem(name);
+            newUDB.setPrice(price);
+            newUDB.setVal(quantity);
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.setMargins(80, 50, 80, 50);
+            newUDB.setLayoutParams(params);
+            udbList[i] = newUDB;
+            grid.addView(newUDB);
+            sum += price * quantity;
+            udbList[i].setOnValueChangedListener(this);
 
-                udbList[i] = newUDB;
-                grid.addView(newUDB);
-                sum += price * quantity;
-                udbList[i].setOnValueChangedListener(this);
-            }
 
             e.putString("ItemName" + i, name);
             e.putFloat("ItemPrice" + i, price);
 
             e.commit();
+        }
+
+        if (numInList == 0) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("Add concession items.");
+            alert.setCancelable(false);
+            alert.setPositiveButton(
+                    "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent I3 = new Intent("com.example.Scott.concessionstand.Customize");
+                            startActivity(I3);
+                        }
+                    });
+            alert.show();
         }
 
         rt.setText(String.format("Running Total - $" + "%.2f",sum));
@@ -190,7 +192,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener, onV
     public void onClick(View v) {
         switch(v.getId())
         {
-            case R.id.btnClear:
+            case R.id.btnSave:
                 for (int i = 0; i < udbList.length; i++) {
                     udbList[i].setVal(0);
                 }

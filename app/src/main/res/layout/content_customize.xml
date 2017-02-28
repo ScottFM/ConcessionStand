@@ -110,13 +110,31 @@
 
     </LinearLayout>
 
-    <Button
-        android:text="Save"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnSave"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:text="Clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnClearItems"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Save"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSave"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
 
 </RelativeLayout>

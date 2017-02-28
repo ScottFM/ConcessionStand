@@ -19,14 +19,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/lytTable"></LinearLayout>
 
-    <Button
-        android:text="Reset Daily Totals"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/btnReset" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,5 +28,13 @@
         android:layout_above="@+id/btnReset"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="36dp" />
+
+    <Button
+        android:text="Reset Daily Totals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnReset"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

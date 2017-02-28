@@ -1,19 +1,12 @@
 package com.example.scott.concessionstand;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,17 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.BatchUpdateException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static android.R.attr.editorExtras;
-import static android.R.attr.id;
-
 public class Customize extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    Button b, bUp25, bDown25,btnSave;
+    Button b, bUp25, bDown25,btnSave, btnClearItems;
     EditText name;
     TextView price;
     ListView lv1;
@@ -103,6 +92,9 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
 
+        btnClearItems = (Button)findViewById(R.id.btnClearItems);
+        btnClearItems.setOnClickListener(this);
+
         lv1 = (ListView) findViewById(R.id.lstCustomize1);
         lv1.setOnItemClickListener(this);
 
@@ -165,6 +157,13 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                 lv1.setAdapter(lstAdapter);
 
                 break;
+            case R.id.btnClearItems:
+                aList.clear();
+                numInList = 0;
+
+                lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
+                lv1.setAdapter(lstAdapter);
+                break;
             case R.id.btnSave:
 
                 //e.clear();
@@ -173,11 +172,12 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                     String name = next.substring(0,next.indexOf(","));
                     float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
 
+
                     e.putString("ItemName"+i, name);
                     e.putFloat("ItemPrice"+i, price);
                     e.commit();
-
                     stringSet.add(name);
+
                 }
                 eDaily.putStringSet("set", stringSet);
                 eDaily.commit();
@@ -195,6 +195,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        String name;
+
         ArrayAdapter<String> lstAdapter;
         lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
         final ArrayAdapter<String> adapter = lstAdapter;
@@ -224,8 +226,8 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                         final EditText itemP = new EditText(Customize.this);
                         final View view;
 
-                        itemN.setInputType(InputType.TYPE_CLASS_TEXT);
-                        itemP.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        //itemN.setInputType(InputType.TYPE_CLASS_TEXT);
+                        itemP.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
                         itemN.setText(aList.get(position).substring(0,aList.get(position).indexOf(",")));
                         itemP.setText(aList.get(position).substring(aList.get(position).indexOf("$")+1));
@@ -236,16 +238,25 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
                         ll.addView(itemP);
                         alertEdit.setView(ll);
 
-
                         alertEdit.setCancelable(false);
                         alertEdit.setPositiveButton("Update",  new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (!itemP.getText().toString().isEmpty()) {
                                     float price = roundToNearest25(Float.parseFloat(itemP.getText().toString()));
-                                    aList.set(position, String.format(itemN.getText().toString() + ", $" + "%.2f", price));
+                                    if (itemN.getText().toString().isEmpty()) {
+                                        aList.set(position, String.format("Nameless, $" + "%.2f", price));
+                                    }
+                                    else {
+                                        aList.set(position, String.format(itemN.getText().toString() + ", $" + "%.2f", price));
+                                    }
                                 }
-                                else {
-                                    aList.set(position, itemN.getText().toString() + ", $0.00");
+                                    else {
+                                    if (itemN.getText().toString().isEmpty()) {
+                                        aList.set(position, String.format("Nameless, $0.00"));
+                                    }
+                                    else {
+                                        aList.set(position, itemN.getText().toString() + ", $0.00");
+                                    }
                                 }
                                 lv1.setAdapter(adapter);
                             }
@@ -276,13 +287,15 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         if (temp >= 0.125)
         {
             f += 0.25-temp;
-            Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
         }
         else if (temp < 0.12){
             f-=temp;
-            Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Price should be in increments of $0.25", Toast.LENGTH_SHORT).show();
         }
+
         return f;
+
     }
 }
 

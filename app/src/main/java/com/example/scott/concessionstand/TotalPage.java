@@ -26,7 +26,10 @@ import org.w3c.dom.Text;
 import java.util.HashSet;
 import java.util.Set;
 
+import static android.R.attr.height;
 import static android.R.attr.name;
+import static android.R.attr.textSize;
+import static android.R.attr.width;
 
 public class TotalPage extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
@@ -71,7 +74,9 @@ public class TotalPage extends AppCompatActivity implements TextView.OnEditorAct
                 String info = String.format(val + " x " + name + ": $" + "%.2f", (price * val));
                 TextView tv = new TextView(this);
                 tv.setText(info);
+                tv.setTextSize(20);
                 lyt.addView(tv);
+
 
                 sum += price * val;
                 z++;
