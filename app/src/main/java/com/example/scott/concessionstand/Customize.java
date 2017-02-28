@@ -38,11 +38,18 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
     EditText name;
     TextView price;
     ListView lv1;
-    ArrayList<String> aList = new ArrayList<String>();
+    ArrayList<String> aList;
     double p = 0;
-    int numInList = 0;
     private int numAtStart = 0;
     Set<String> stringSet;
+
+    SharedPreferences sharedNum;
+    SharedPreferences shared;
+    SharedPreferences.Editor e;
+    int numInList;
+    SharedPreferences.Editor eNum;
+    SharedPreferences sharedDaily;
+    SharedPreferences.Editor eDaily;
 
 
     @Override
@@ -52,6 +59,39 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setUp();
+
+        ArrayAdapter<String> lstAdapter;
+
+        stringSet = sharedDaily.getStringSet("set", new HashSet<String>());
+
+        for (int i = 0; i < aList.size(); i++) {
+            String next = aList.get(i);
+            String item = next.substring(0,next.indexOf(","));
+            float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
+
+            stringSet.add(item);
+        }
+        eDaily.commit();
+
+        numAtStart = 0;
+        for (int i = 0; i < numInList; i++) {
+            String myName = shared.getString("ItemName"+i, "");
+            float myPrice = shared.getFloat("ItemPrice"+i, 0);
+
+            String newString= new String(String.format(myName + ", $" + "%.2f", myPrice));
+
+            if(myName != "")
+                aList.add(newString);
+
+            lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
+            lv1.setAdapter(lstAdapter);
+
+            numAtStart++;
+        }
+    }
+
+    public void setUp() {
         name = (EditText) findViewById(R.id.edtName);
         price = (TextView) findViewById(R.id.txtPriceCust);
 
@@ -71,79 +111,19 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         lv1.setOnItemClickListener(this);
 
         stringSet = new HashSet<String>();
+        aList = new ArrayList<String>();
 
-        ArrayAdapter<String> lstAdapter;
-        SharedPreferences sharedNum = getSharedPreferences("num", 0);
-        int num = sharedNum.getInt("numInList", 0);
-
-        SharedPreferences shared = getSharedPreferences( "myFile", 0);
-        SharedPreferences.Editor e = shared.edit();
-
-        SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
-        SharedPreferences.Editor eDaily = sharedDaily.edit();
-
-        stringSet = sharedDaily.getStringSet("set", new HashSet<String>());
-
-        for (int i = 0; i < aList.size(); i++) {
-            String next = aList.get(i);
-            String item = next.substring(0,next.indexOf(","));
-            float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
-
-            stringSet.add(item);
-        }
-        eDaily.commit();
-
-        numAtStart = 0;
-        for (int i = 0; i < num; i++) {
-            String myName = shared.getString("ItemName"+i, "");
-            float myPrice = shared.getFloat("ItemPrice"+i, 0);
-
-            String newString= new String(String.format(myName + ", $" + "%.2f", myPrice));
-
-            if(myName != "")
-                aList.add(newString);
-
-            lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
-            lv1.setAdapter(lstAdapter);
-
-            numAtStart++;
-        }
+        sharedNum = getSharedPreferences("num", 0);
+        shared = getSharedPreferences("myFile", 0);
+        e = shared.edit();
+        numInList = sharedNum.getInt("numInList",0);
+        eNum = sharedNum.edit();
+        sharedDaily = getSharedPreferences("ItemsDaily", 0);
+        eDaily = sharedDaily.edit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Customize) {
-            Intent I = new Intent("com.example.Scott.concessionstand.Customize");
-            startActivityForResult(I, 1);
-            return true;
-        }
-
-        if (id == R.id.action_dailyTotal) {
-            Intent I2 = new Intent("com.example.Scott.concessionstand.DailyTotals");
-            startActivityForResult(I2, 1);
-            //finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onClick(View v) {
-
-
         switch(v.getId()) {
             case R.id.btnUp25:
                 p += 0.25;
@@ -182,34 +162,27 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
 
                 break;
             case R.id.btnSave:
-                SharedPreferences sharedNum = getSharedPreferences( "num", 0);
-                int num = sharedNum.getInt("numInList", 0);
 
-                SharedPreferences shared = getSharedPreferences( "myFile", 0);
-                SharedPreferences.Editor e = shared.edit();
-
-                SharedPreferences sharedDaily = getSharedPreferences("ItemsDaily", 0);
-                SharedPreferences.Editor eDaily = sharedDaily.edit();
-
-                e.clear();
-                for (int i = 0; i < aList.size(); i++) {
+                //e.clear();
+                for (int i = 0; i < numInList; i++) {
                     String next = aList.get(i);
                     String name = next.substring(0,next.indexOf(","));
                     float price = Float.parseFloat(next.substring(next.indexOf("$")+1));
 
                     e.putString("ItemName"+i, name);
+                    //eDaily.putString("ItemName"+i, name);
                     e.putFloat("ItemPrice"+i, price);
+                    //eDaily.putFloat("ItemPrice"+i, price);
                     e.commit();
+                    //eDaily.commit();
 
                     stringSet.add(name);
-
-
                 }
                 eDaily.putStringSet("set", stringSet);
                 eDaily.commit();
 
                 SharedPreferences.Editor eNum = sharedNum.edit();
-                eNum.putInt("numInList", numInList+numAtStart);
+                eNum.putInt("numInList", numInList);
                 eNum.commit();
                 //Intent I = new Intent("com.example.Scott.concessionstand.Main");
                 //startActivity(I);
@@ -224,9 +197,6 @@ public class Customize extends AppCompatActivity implements View.OnClickListener
         ArrayAdapter<String> lstAdapter;
         lstAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, aList);
         final ArrayAdapter<String> adapter = lstAdapter;
-
-        SharedPreferences sharedNum = getSharedPreferences("num", 0);
-        SharedPreferences.Editor eNum = sharedNum.edit();
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final int positionToRemove = position;

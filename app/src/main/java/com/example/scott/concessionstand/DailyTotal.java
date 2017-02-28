@@ -30,6 +30,14 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
     Button reset;
     float totalPrice;
 
+    SharedPreferences sharedNum;
+    SharedPreferences shared;
+    SharedPreferences.Editor e;
+    int numInList;
+    SharedPreferences.Editor eNum;
+    SharedPreferences sharedDaily;
+    SharedPreferences.Editor eDaily;
+
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -39,11 +47,7 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        txtdailyrev = (TextView) findViewById(R.id.txtDailyRev);
-        lyt = (LinearLayout) findViewById(R.id.lytTable);
-
-        reset = (Button) findViewById(R.id.btnReset);
-        reset.setOnClickListener(this);
+        setUp();
 
         SharedPreferences shared = getSharedPreferences("ItemsDaily", 0);
         Set<String> stringSet = shared.getStringSet("set", new HashSet<String>());
@@ -67,47 +71,33 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
             LinearLayout llHorizontal = new LinearLayout(this);
             llHorizontal.setOrientation(LinearLayout.HORIZONTAL);
 
-            llHorizontal.addView(tvQ, 200, 100);
-            llHorizontal.addView(tvN, 600, 100);
-            llHorizontal.addView(tvP, 400, 100);
+            if (name != "" && quantity > 0) {
+                llHorizontal.addView(tvQ, 200, 100);
+                llHorizontal.addView(tvN, 800, 100);
+                llHorizontal.addView(tvP, 400, 100);
+            }
+
             lyt.addView(llHorizontal);
 
             totalPrice += quantity*price;
         }
-
         txtdailyrev.setText(String.format("Daily profit: $" + "%.2f", totalPrice));
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    public void setUp() {
+        txtdailyrev = (TextView) findViewById(R.id.txtDailyRev);
+        lyt = (LinearLayout) findViewById(R.id.lytTable);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        reset = (Button) findViewById(R.id.btnReset);
+        reset.setOnClickListener(this);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Customize) {
-            Intent I = new Intent("com.example.Scott.concessionstand.Customize");
-            startActivityForResult(I, 1);
-            //finish();
-            return true;
-        }
-
-        if (id == R.id.action_dailyTotal) {
-            Intent I2 = new Intent("com.example.Scott.concessionstand.DailyTotals");
-            startActivityForResult(I2, 1);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        sharedNum = getSharedPreferences("num", 0);
+        shared = getSharedPreferences("myFile", 0);
+        e = shared.edit();
+        numInList = sharedNum.getInt("numInList",0);
+        eNum = sharedNum.edit();
+        sharedDaily = getSharedPreferences("ItemsDaily", 0);
+        eDaily = sharedDaily.edit();
     }
 
     @Override
@@ -135,7 +125,6 @@ public class DailyTotal extends AppCompatActivity implements View.OnClickListene
 
                         eDaily.clear();
                         eDaily.commit();
-
                     }
                 });
         alert.setNegativeButton(
